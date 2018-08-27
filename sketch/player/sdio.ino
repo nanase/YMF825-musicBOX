@@ -50,6 +50,10 @@ static bool sd_is_m25_file() {
 
 static bool sd_read() {
   currentFile.seek(sd_position);
+
+  for (int16_t i = 0; i < SD_BUFFER_SIZE; i++)
+    sd_buffer[i] = 0x00;
+
   return currentFile.read(sd_buffer, SD_BUFFER_SIZE) != 0;
 }
 
