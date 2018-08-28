@@ -7,7 +7,6 @@ static File currentFile;
 byte sd_buffer[SD_BUFFER_SIZE];
 static int32_t sd_position = 0;
 static int32_t sd_buffer_position = 0;
-char filename[SD_FILE_NAME_LENGTH];
 
 bool sd_initialize() {
   Serial.println("[DEBUG] SD initialization");
@@ -23,8 +22,9 @@ bool sd_initialize() {
 
 void sd_seek_next() {
   if (currentFile.available()) {
+    sd_read_filename();
     Serial.print("[DEBUG] Close: ");
-    Serial.println(sd_filename());
+    Serial.println((char*)sd_buffer);
     currentFile.close();
   }
 
@@ -39,8 +39,9 @@ void sd_seek_next() {
     }
 
     if (!sd_is_m25_file()) {
+      sd_read_filename();
       Serial.print("[DEBUG] Not m25 format: ");
-      Serial.println(sd_filename());
+      Serial.println((char*)sd_buffer);
       currentFile.close();
       continue;
     }
@@ -48,8 +49,9 @@ void sd_seek_next() {
     break;
   }
   
+  sd_read_filename();
   Serial.print("[DEBUG] Open: ");
-  Serial.println(sd_filename());
+  Serial.println((char*)sd_buffer);
   
   sd_position = 0;
   sd_buffer_position = 0;
@@ -57,21 +59,20 @@ void sd_seek_next() {
 }
 
 static bool sd_is_m25_file() {
-  char* extension = strrchr(sd_filename(), '.');
+  sd_read_filename();
+  char* extension = strrchr((char*)sd_buffer, '.');
   return extension && strcmp(extension, ".m25") == 0;
 }
 
-static char* sd_filename() {
-  if (!currentFile.getName(filename, SD_FILE_NAME_LENGTH)) {
+static sd_read_filename() {
+  if (!currentFile.getName((char*)sd_buffer, SD_BUFFER_SIZE)) {
     Serial.print("[ERROR] Can't read file name: ");
-    filename[SD_FILE_NAME_LENGTH - 1] = 0x00;
-    Serial.println(filename);
+    sd_buffer[SD_BUFFER_SIZE - 1] = 0x00;
+    Serial.println((char*)sd_buffer);
 
     while (true)
       delay(100);
   }
-
-  return filename;
 }
 
 static bool sd_read() {
