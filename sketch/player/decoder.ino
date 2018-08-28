@@ -1,11 +1,10 @@
 byte selx = SELX_LR_ENABLE;
+extern int16_t sd_position;
 extern byte sd_buffer[SD_BUFFER_SIZE];
 extern volatile bool ymf825_playing;
 extern volatile bool ymf825_next_file;
 
 bool progress() {
-  int16_t pos;
-
   if (!ymf825_playing)
     return true;
 
@@ -14,31 +13,33 @@ bool progress() {
     return false;
   }
 
-  if ((pos = sd_read_buffer(1)) == EOF)
+  sd_read_buffer(1);
+
+  if (sd_position == EOF)
     return false;
 
-  selx = sd_buffer[pos] & SELX_MASK;
+  selx = sd_buffer[sd_position] & SELX_MASK;
 
   // Wait
   if (selx == SELX_WAIT) {
-    wait_add((sd_buffer[pos] & LENX_MASK) + 1);
+    wait_add((sd_buffer[sd_position] & LENX_MASK) + 1);
     return true;
   }
 
   // WOPx
-  switch (sd_buffer[pos] & WOPX_MASK) {
+  switch (sd_buffer[sd_position] & WOPX_MASK) {
     case WOPX_WRITE_DA_DD:
-      if (!write_da_dd((sd_buffer[pos] & LENX_MASK) + 1))
+      if (!write_da_dd((sd_buffer[sd_position] & LENX_MASK) + 1))
         return false;
       break;
 
     case WOPX_WRITE_SA_DD:
-      if (!write_sa_dd((sd_buffer[pos] & LENX_MASK) + 1))
+      if (!write_sa_dd((sd_buffer[sd_position] & LENX_MASK) + 1))
         return false;
       break;
       
     case WOPX_BURSTWRITE_TONE:
-      if (!burstwrite_tone(((int16_t)sd_buffer[pos] & LENX_MASK) + 1))
+      if (!burstwrite_tone(((int16_t)sd_buffer[sd_position] & LENX_MASK) + 1))
         return false;
       break;
       
@@ -52,16 +53,16 @@ bool progress() {
 }
 
 bool write_da_dd(byte length) {
-  int16_t pos;
+  sd_read_buffer(length * 2);
 
-  if ((pos = sd_read_buffer(length * 2)) == EOF)
+  if (sd_position == EOF)
     return false;
 
   for (byte i = 0; i < length; i++) {
     ymf825_select();
     ymf825_write(
-      sd_buffer[pos + i * 2 + 0],   // address
-      sd_buffer[pos + i * 2 + 1]    // data
+      sd_buffer[sd_position + i * 2 + 0],   // address
+      sd_buffer[sd_position + i * 2 + 1]    // data
     );
     ymf825_unselect();
   }
@@ -70,16 +71,16 @@ bool write_da_dd(byte length) {
 }
 
 bool write_sa_dd(byte length) {
-  int16_t pos;
+  sd_read_buffer(length + 1);
 
-  if ((pos = sd_read_buffer(length + 1)) == EOF)
+  if (sd_position == EOF)
     return false;
 
   for (byte i = 0; i < length; i++) {
     ymf825_select();
     ymf825_write(
-      sd_buffer[pos + 0],       // address
-      sd_buffer[pos + i + 1]    // data
+      sd_buffer[sd_position + 0],       // address
+      sd_buffer[sd_position + i + 1]    // data
     );
     ymf825_unselect();
   }
@@ -88,15 +89,15 @@ bool write_sa_dd(byte length) {
 }
 
 bool burstwrite_tone(int16_t length) {
-  int16_t pos;
+  sd_read_buffer(length * 30 + 6);
 
-  if ((pos = sd_read_buffer(length * 30 + 6)) == EOF)
+  if (sd_position == EOF)
     return false;
 
   ymf825_select();
   ymf825_burstwrite(
-    sd_buffer[pos + 0],
-    &sd_buffer[pos + 1],
+    sd_buffer[sd_position + 0],
+    &sd_buffer[sd_position + 1],
     length * 30 + 5
   );
   ymf825_unselect();
@@ -105,15 +106,15 @@ bool burstwrite_tone(int16_t length) {
 }
 
 bool burstwrite_eq() {
-  int16_t pos;
+  sd_read_buffer(16);
 
-  if ((pos = sd_read_buffer(16)) == EOF)
+  if (sd_position == EOF)
     return false;
 
   ymf825_select();
   ymf825_burstwrite(
-    sd_buffer[pos + 0],
-    &sd_buffer[pos + 1],
+    sd_buffer[sd_position + 0],
+    &sd_buffer[sd_position + 1],
     15
   );
   ymf825_unselect();

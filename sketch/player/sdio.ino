@@ -5,7 +5,8 @@ SdFat SD;
 static File root;
 static File currentFile;
 byte sd_buffer[SD_BUFFER_SIZE];
-static int32_t sd_position = 0;
+int16_t sd_position = 0;
+static int32_t sd_seek_position = 0;
 static int32_t sd_buffer_position = 0;
 
 bool sd_initialize() {
@@ -53,7 +54,7 @@ void sd_seek_next() {
   Serial.print("[DEBUG] Open: ");
   Serial.println((char*)sd_buffer);
   
-  sd_position = 0;
+  sd_seek_position = 0;
   sd_buffer_position = 0;
   sd_read();
 }
@@ -76,7 +77,7 @@ static void sd_read_filename() {
 }
 
 static bool sd_read() {
-  currentFile.seek(sd_position);
+  currentFile.seek(sd_seek_position);
 
   for (int16_t i = 0; i < SD_BUFFER_SIZE; i++)
     sd_buffer[i] = 0x00;
@@ -84,15 +85,15 @@ static bool sd_read() {
   return currentFile.read(sd_buffer, SD_BUFFER_SIZE) != 0;
 }
 
-int16_t sd_read_buffer(int16_t size) {
+void sd_read_buffer(int16_t size) {
   if (SD_BUFFER_SIZE - sd_buffer_position < size) {
-    sd_position += sd_buffer_position;
+    sd_seek_position += sd_buffer_position;
 
     sd_buffer_position = size;
-
-    return sd_read() ? 0 : EOF;
+    sd_position = sd_read() ? 0 : EOF;
+    return;
   }
   
+  sd_position = sd_buffer_position;
   sd_buffer_position += size;
-  return sd_buffer_position - size;
 }
