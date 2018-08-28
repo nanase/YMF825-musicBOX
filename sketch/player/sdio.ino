@@ -1,11 +1,12 @@
 #include "definitions.h"
 #include "SdFat.h"
-SdFat SD;
 
-static File root;
-static File currentFile;
 byte sd_buffer[SD_BUFFER_SIZE];
 int16_t sd_position = 0;
+
+static SdFat SD;
+static File root;
+static File currentFile;
 static int32_t sd_seek_position = 0;
 static int32_t sd_buffer_position = 0;
 

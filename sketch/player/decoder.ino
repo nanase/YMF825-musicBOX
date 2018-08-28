@@ -1,4 +1,5 @@
 byte selx = SELX_LR_ENABLE;
+
 extern int16_t sd_position;
 extern byte sd_buffer[SD_BUFFER_SIZE];
 extern volatile bool ymf825_playing;
