@@ -64,7 +64,7 @@ static bool sd_is_m25_file() {
   return extension && strcmp(extension, ".m25") == 0;
 }
 
-static sd_read_filename() {
+static void sd_read_filename() {
   if (!currentFile.getName((char*)sd_buffer, SD_BUFFER_SIZE)) {
     Serial.print("[ERROR] Can't read file name: ");
     sd_buffer[SD_BUFFER_SIZE - 1] = 0x00;
