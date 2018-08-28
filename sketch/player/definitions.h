@@ -44,5 +44,5 @@ const byte LENX_MASK              = B00001111;
 
 #define EOF                         (-1)
 
-// min: 486, recommanded max: 720
+// min: 486
 const int32_t SD_BUFFER_SIZE      = 486;
