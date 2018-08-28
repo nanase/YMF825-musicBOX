@@ -3,12 +3,16 @@
 
 void setup() {
   Serial.begin(9600);
+  Serial.println("[DEBUG] Setup");
+
   setup_port();
+  Serial.println("[DEBUG] Port setup");
   
   SPI.setBitOrder(MSBFIRST);
   SPI.setClockDivider(SPI_CLOCK_DIV4);
   SPI.setDataMode(SPI_MODE0);
   SPI.begin();
+  Serial.println("[DEBUG] SPI Begin");
 
   ymf825_unselect();
   ymf825_reset_hardware();
@@ -25,11 +29,11 @@ void loop() {
   ymf825_reset_hardware();
   wait_begin();
 
-  Serial.println("Start");
+  Serial.println("[INFO ] Playing Start");
 
   while (progress()) {
     wait_invoke();
   }
 
-  Serial.println("EOF");
+  Serial.println("[INFO ] EOF");
 }

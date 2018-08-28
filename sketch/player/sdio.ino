@@ -10,8 +10,10 @@ static int32_t sd_buffer_position = 0;
 char filename[SD_FILE_NAME_LENGTH];
 
 bool sd_initialize() {
+  Serial.println("[DEBUG] SD initialization");
+
   if (!SD.begin(PIN_SD)) {
-    Serial.println("initialization failed!");
+    Serial.println("[ERROR] SD initialization failed");
     return false;
   }
 
@@ -21,6 +23,8 @@ bool sd_initialize() {
 
 void sd_seek_next() {
   if (currentFile.available()) {
+    Serial.print("[DEBUG] Close: ");
+    Serial.println(sd_filename());
     currentFile.close();
   }
 
@@ -29,11 +33,14 @@ void sd_seek_next() {
 
     if (!currentFile) {
       root.rewindDirectory();
+      Serial.println("[DEBUG] Rewind");
       delay(250);
       continue;
     }
 
     if (!sd_is_m25_file()) {
+      Serial.print("[DEBUG] Not m25 format: ");
+      Serial.println(sd_filename());
       currentFile.close();
       continue;
     }
@@ -41,7 +48,8 @@ void sd_seek_next() {
     break;
   }
   
-  Serial.println(currentFile.name());
+  Serial.print("[DEBUG] Open: ");
+  Serial.println(sd_filename());
   
   sd_position = 0;
   sd_buffer_position = 0;
