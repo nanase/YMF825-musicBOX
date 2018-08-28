@@ -1,15 +1,15 @@
-static unsigned long wait_goal = 0;
+static unsigned long waitGoal = 0;
 
-void wait_begin() {
-  wait_goal = micros();
+void waitBegin() {
+  waitGoal = micros();
 }
 
-void wait_add(byte tick) {
-  wait_goal += (unsigned long)tick * WAIT_RESOLUTION * 1000;
+void waitAdd(byte tick) {
+  waitGoal += (unsigned long)tick * WAIT_RESOLUTION * 1000;
 }
 
-void wait_invoke() {
-  while (wait_goal > micros()) {
+void waitInvoke() {
+  while (waitGoal > micros()) {
     delayMicroseconds(8);
   }
 }

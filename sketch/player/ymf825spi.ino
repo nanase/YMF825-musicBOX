@@ -1,50 +1,50 @@
 #include <SPI.h>
 
-volatile bool ymf825_playing = false;
-volatile bool ymf825_next_file = false;
+volatile bool ymf825Playing = false;
+volatile bool ymf825NextFile = false;
 
-void ymf825_pause() {
-  ymf825_playing = !ymf825_playing;
+void ymf825Pause() {
+  ymf825Playing = !ymf825Playing;
   Serial.print("[INFO ] Push button: ");
-  Serial.println(ymf825_playing ? "PLAY" : "PAUSE");
-  wait_begin();
+  Serial.println(ymf825Playing ? "PLAY" : "PAUSE");
+  waitBegin();
 }
 
-void ymf825_next() {
+void ymf825Next() {
   Serial.println("[INFO ] Push button: NEXT");
-  ymf825_next_file = true;
+  ymf825NextFile = true;
 }
 
-void ymf825_write(byte address, byte data) {
-  ymf825_select();
+void ymf825Write(byte address, byte data) {
+  ymf825ChipSelect();
   SPI.transfer(address);
   SPI.transfer(data);
-  ymf825_unselect();
+  ymf825ChipUnselect();
 }
 
-void ymf825_burstwrite(byte address, byte* data, uint16_t size) {
-  ymf825_select();
+void ymf825BurstWrite(byte address, byte* data, uint16_t size) {
+  ymf825ChipSelect();
   SPI.transfer(address);
   SPI.transfer(data, size);
-  ymf825_unselect();
+  ymf825ChipUnselect();
 }
 
-void ymf825_select() {
+void ymf825ChipSelect() {
   if (selx == SELX_LR_ENABLE)
-    enable_lrch();
+    enableLRch();
   else if (selx == SELX_LCH_ENABLE)
-    enable_lch();
+    enableLch();
   else
-    enable_rch();
+    enableRch();
 }
 
-void ymf825_unselect() {
-  disable_ss();
+void ymf825ChipUnselect() {
+  disableSS();
 }
 
-void ymf825_reset_hardware() {
-  disable_ic();
-  enable_ic();
+void ymf825ResetHardware() {
+  disableIC();
+  enableIC();
   delayMicroseconds(100);
-  disable_ic();
+  disableIC();
 }

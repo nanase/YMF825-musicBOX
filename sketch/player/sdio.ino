@@ -1,16 +1,16 @@
 #include "definitions.h"
 #include "SdFat.h"
 
-byte sd_buffer[SD_BUFFER_SIZE];
-int16_t sd_position = 0;
+byte sdBuffer[SD_BUFFER_SIZE];
+int16_t sdPosition = 0;
 
 static SdFat SD;
 static File root;
 static File currentFile;
-static int32_t sd_seek_position = 0;
-static int32_t sd_buffer_position = 0;
+static int32_t sdSeekPosition = 0;
+static int32_t sdBufferPosition = 0;
 
-bool sd_initialize() {
+bool sdInitialize() {
   Serial.println("[DEBUG] SD initialization");
 
   if (!SD.begin(PIN_SD)) {
@@ -22,11 +22,11 @@ bool sd_initialize() {
   return true;
 }
 
-void sd_seek_next() {
+void sdSeekNext() {
   if (currentFile.available()) {
-    sd_read_filename();
+    sdReadFileName();
     Serial.print("[DEBUG] Close: ");
-    Serial.println((char*)sd_buffer);
+    Serial.println((char*)sdBuffer);
     currentFile.close();
   }
 
@@ -40,10 +40,10 @@ void sd_seek_next() {
       continue;
     }
 
-    if (!sd_is_m25_file()) {
-      sd_read_filename();
+    if (!sdIsM25File()) {
+      sdReadFileName();
       Serial.print("[DEBUG] Not m25 format: ");
-      Serial.println((char*)sd_buffer);
+      Serial.println((char*)sdBuffer);
       currentFile.close();
       continue;
     }
@@ -51,50 +51,50 @@ void sd_seek_next() {
     break;
   }
   
-  sd_read_filename();
+  sdReadFileName();
   Serial.print("[DEBUG] Open: ");
-  Serial.println((char*)sd_buffer);
+  Serial.println((char*)sdBuffer);
   
-  sd_seek_position = 0;
-  sd_buffer_position = 0;
-  sd_read();
+  sdSeekPosition = 0;
+  sdBufferPosition = 0;
+  sdRead();
 }
 
-static bool sd_is_m25_file() {
-  sd_read_filename();
-  char* extension = strrchr((char*)sd_buffer, '.');
+static bool sdIsM25File() {
+  sdReadFileName();
+  char* extension = strrchr((char*)sdBuffer, '.');
   return extension && strcmp(extension, ".m25") == 0;
 }
 
-static void sd_read_filename() {
-  if (!currentFile.getName((char*)sd_buffer, SD_BUFFER_SIZE)) {
+static void sdReadFileName() {
+  if (!currentFile.getName((char*)sdBuffer, SD_BUFFER_SIZE)) {
     Serial.print("[ERROR] Can't read file name: ");
-    sd_buffer[SD_BUFFER_SIZE - 1] = 0x00;
-    Serial.println((char*)sd_buffer);
+    sdBuffer[SD_BUFFER_SIZE - 1] = 0x00;
+    Serial.println((char*)sdBuffer);
 
     while (true)
       delay(100);
   }
 }
 
-static bool sd_read() {
-  currentFile.seek(sd_seek_position);
+static bool sdRead() {
+  currentFile.seek(sdSeekPosition);
 
   for (int16_t i = 0; i < SD_BUFFER_SIZE; i++)
-    sd_buffer[i] = 0x00;
+    sdBuffer[i] = 0x00;
 
-  return currentFile.read(sd_buffer, SD_BUFFER_SIZE) != 0;
+  return currentFile.read(sdBuffer, SD_BUFFER_SIZE) != 0;
 }
 
-void sd_read_buffer(int16_t size) {
-  if (SD_BUFFER_SIZE - sd_buffer_position < size) {
-    sd_seek_position += sd_buffer_position;
+void sdReadBuffer(int16_t size) {
+  if (SD_BUFFER_SIZE - sdBufferPosition < size) {
+    sdSeekPosition += sdBufferPosition;
 
-    sd_buffer_position = size;
-    sd_position = sd_read() ? 0 : EOF;
+    sdBufferPosition = size;
+    sdPosition = sdRead() ? 0 : EOF;
     return;
   }
   
-  sd_position = sd_buffer_position;
-  sd_buffer_position += size;
+  sdPosition = sdBufferPosition;
+  sdBufferPosition += size;
 }

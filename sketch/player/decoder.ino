@@ -1,51 +1,51 @@
 byte selx = SELX_LR_ENABLE;
 
-extern int16_t sd_position;
-extern byte sd_buffer[SD_BUFFER_SIZE];
-extern volatile bool ymf825_playing;
-extern volatile bool ymf825_next_file;
+extern int16_t sdPosition;
+extern byte sdBuffer[SD_BUFFER_SIZE];
+extern volatile bool ymf825Playing;
+extern volatile bool ymf825NextFile;
 
 bool progress() {
-  if (!ymf825_playing)
+  if (!ymf825Playing)
     return true;
 
-  if (ymf825_next_file) {
-    ymf825_next_file = false;
+  if (ymf825NextFile) {
+    ymf825NextFile = false;
     return false;
   }
 
-  sd_read_buffer(1);
+  sdReadBuffer(1);
 
-  if (sd_position == EOF)
+  if (sdPosition == EOF)
     return false;
 
-  selx = sd_buffer[sd_position] & SELX_MASK;
+  selx = sdBuffer[sdPosition] & SELX_MASK;
 
   // Wait
   if (selx == SELX_WAIT) {
-    wait_add((sd_buffer[sd_position] & LENX_MASK) + 1);
+    waitAdd((sdBuffer[sdPosition] & LENX_MASK) + 1);
     return true;
   }
 
   // WOPx
-  switch (sd_buffer[sd_position] & WOPX_MASK) {
+  switch (sdBuffer[sdPosition] & WOPX_MASK) {
     case WOPX_WRITE_DA_DD:
-      if (!write_da_dd((sd_buffer[sd_position] & LENX_MASK) + 1))
+      if (!writeDADD((sdBuffer[sdPosition] & LENX_MASK) + 1))
         return false;
       break;
 
     case WOPX_WRITE_SA_DD:
-      if (!write_sa_dd((sd_buffer[sd_position] & LENX_MASK) + 1))
+      if (!writeSADD((sdBuffer[sdPosition] & LENX_MASK) + 1))
         return false;
       break;
       
     case WOPX_BURSTWRITE_TONE:
-      if (!burstwrite_tone(((int16_t)sd_buffer[sd_position] & LENX_MASK) + 1))
+      if (!burstwriteTone(((int16_t)sdBuffer[sdPosition] & LENX_MASK) + 1))
         return false;
       break;
       
     case WOPX_BURSTWRITE_EQ:
-      if (!burstwrite_eq())
+      if (!burstwriteEq())
         return false;
       break;
   }
@@ -53,72 +53,72 @@ bool progress() {
   return true;
 }
 
-bool write_da_dd(byte length) {
-  sd_read_buffer(length * 2);
+static bool writeDADD(byte length) {
+  sdReadBuffer(length * 2);
 
-  if (sd_position == EOF)
+  if (sdPosition == EOF)
     return false;
 
   for (byte i = 0; i < length; i++) {
-    ymf825_select();
-    ymf825_write(
-      sd_buffer[sd_position + i * 2 + 0],   // address
-      sd_buffer[sd_position + i * 2 + 1]    // data
+    ymf825ChipSelect();
+    ymf825Write(
+      sdBuffer[sdPosition + i * 2 + 0],   // address
+      sdBuffer[sdPosition + i * 2 + 1]    // data
     );
-    ymf825_unselect();
+    ymf825ChipUnselect();
   }
 
   return true;
 }
 
-bool write_sa_dd(byte length) {
-  sd_read_buffer(length + 1);
+static bool writeSADD(byte length) {
+  sdReadBuffer(length + 1);
 
-  if (sd_position == EOF)
+  if (sdPosition == EOF)
     return false;
 
   for (byte i = 0; i < length; i++) {
-    ymf825_select();
-    ymf825_write(
-      sd_buffer[sd_position + 0],       // address
-      sd_buffer[sd_position + i + 1]    // data
+    ymf825ChipSelect();
+    ymf825Write(
+      sdBuffer[sdPosition + 0],       // address
+      sdBuffer[sdPosition + i + 1]    // data
     );
-    ymf825_unselect();
+    ymf825ChipUnselect();
   }
 
   return true;
 }
 
-bool burstwrite_tone(int16_t length) {
-  sd_read_buffer(length * 30 + 6);
+static bool burstwriteTone(int16_t length) {
+  sdReadBuffer(length * 30 + 6);
 
-  if (sd_position == EOF)
+  if (sdPosition == EOF)
     return false;
 
-  ymf825_select();
-  ymf825_burstwrite(
-    sd_buffer[sd_position + 0],
-    &sd_buffer[sd_position + 1],
+  ymf825ChipSelect();
+  ymf825BurstWrite(
+    sdBuffer[sdPosition + 0],
+    &sdBuffer[sdPosition + 1],
     length * 30 + 5
   );
-  ymf825_unselect();
+  ymf825ChipUnselect();
 
   return true;
 }
 
-bool burstwrite_eq() {
-  sd_read_buffer(16);
+static bool burstwriteEq() {
+  sdReadBuffer(16);
 
-  if (sd_position == EOF)
+  if (sdPosition == EOF)
     return false;
 
-  ymf825_select();
-  ymf825_burstwrite(
-    sd_buffer[sd_position + 0],
-    &sd_buffer[sd_position + 1],
+  ymf825ChipSelect();
+  ymf825BurstWrite(
+    sdBuffer[sdPosition + 0],
+    &sdBuffer[sdPosition + 1],
     15
   );
-  ymf825_unselect();
+  ymf825ChipUnselect();
 
   return true;
 }

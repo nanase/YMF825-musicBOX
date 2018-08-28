@@ -5,7 +5,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("[DEBUG] Setup");
 
-  setup_port();
+  setupPort();
   Serial.println("[DEBUG] Port setup");
   
   SPI.setBitOrder(MSBFIRST);
@@ -14,25 +14,25 @@ void setup() {
   SPI.begin();
   Serial.println("[DEBUG] SPI Begin");
 
-  ymf825_unselect();
-  ymf825_reset_hardware();
-  sd_initialize();
+  ymf825ChipUnselect();
+  ymf825ResetHardware();
+  sdInitialize();
 
-  ymf825_pause();
-  attachInterrupt(0, ymf825_pause, FALLING);
-  attachInterrupt(1, ymf825_next, FALLING);
+  ymf825Pause();
+  attachInterrupt(0, ymf825Pause, FALLING);
+  attachInterrupt(1, ymf825Next, FALLING);
 }
 
 void loop() {
-  sd_seek_next();
-  ymf825_unselect();
-  ymf825_reset_hardware();
-  wait_begin();
+  sdSeekNext();
+  ymf825ChipUnselect();
+  ymf825ResetHardware();
+  waitBegin();
 
   Serial.println("[INFO ] Playing Start");
 
   while (progress()) {
-    wait_invoke();
+    waitInvoke();
   }
 
   Serial.println("[INFO ] EOF");
