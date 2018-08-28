@@ -46,3 +46,4 @@ const byte LENX_MASK              = B00001111;
 
 // min: 486, recommanded max: 720
 const int32_t SD_BUFFER_SIZE      = 486;
+const size_t SD_FILE_NAME_LENGTH  = 32;

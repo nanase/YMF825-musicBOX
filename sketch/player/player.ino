@@ -21,6 +21,9 @@ void setup() {
 
 void loop() {
   sd_seek_next();
+  ymf825_unselect();
+  ymf825_reset_hardware();
+  wait_begin();
 
   Serial.println("Start");
 

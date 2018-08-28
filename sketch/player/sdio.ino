@@ -1,11 +1,13 @@
 #include "definitions.h"
-#include <SD.h>
+#include "SdFat.h"
+SdFat SD;
 
 static File root;
 static File currentFile;
 byte sd_buffer[SD_BUFFER_SIZE];
 static int32_t sd_position = 0;
 static int32_t sd_buffer_position = 0;
+char filename[SD_FILE_NAME_LENGTH];
 
 bool sd_initialize() {
   if (!SD.begin(PIN_SD)) {
@@ -19,7 +21,7 @@ bool sd_initialize() {
 
 void sd_seek_next() {
   if (currentFile.available()) {
-     currentFile.close();
+    currentFile.close();
   }
 
   while (true) {
@@ -27,11 +29,14 @@ void sd_seek_next() {
 
     if (!currentFile) {
       root.rewindDirectory();
+      delay(250);
       continue;
     }
 
-    if (!sd_is_m25_file())
+    if (!sd_is_m25_file()) {
+      currentFile.close();
       continue;
+    }
     
     break;
   }
@@ -44,8 +49,21 @@ void sd_seek_next() {
 }
 
 static bool sd_is_m25_file() {
-  char* extension = strrchr(currentFile.name(), '.');
-  return extension && strcmp(extension, ".M25") == 0;
+  char* extension = strrchr(sd_filename(), '.');
+  return extension && strcmp(extension, ".m25") == 0;
+}
+
+static char* sd_filename() {
+  if (!currentFile.getName(filename, SD_FILE_NAME_LENGTH)) {
+    Serial.print("[ERROR] Can't read file name: ");
+    filename[SD_FILE_NAME_LENGTH - 1] = 0x00;
+    Serial.println(filename);
+
+    while (true)
+      delay(100);
+  }
+
+  return filename;
 }
 
 static bool sd_read() {
