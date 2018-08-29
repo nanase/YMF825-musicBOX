@@ -15,6 +15,23 @@ void ymf825Next() {
   ymf825NextFile = true;
 }
 
+void ymf825AllRelease() {
+  Serial.print("[INFO ] All Release");
+  
+  for (byte i = 0; i < 16; i++)
+  {
+    enableLRch();
+    SPI.transfer(0x0b);
+    SPI.transfer(i);
+    disableSS();
+    
+    enableLRch();
+    SPI.transfer(0x0f);
+    SPI.transfer(i);
+    disableSS();
+  }
+}
+
 void ymf825Write(byte address, byte data) {
   ymf825ChipSelect();
   SPI.transfer(address);

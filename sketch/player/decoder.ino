@@ -1,4 +1,5 @@
 byte selx = SELX_LR_ENABLE;
+static bool paused = false;
 
 extern int16_t sdPosition;
 extern byte sdBuffer[SD_BUFFER_SIZE];
@@ -6,8 +7,17 @@ extern volatile bool ymf825Playing;
 extern volatile bool ymf825NextFile;
 
 bool progress() {
-  if (!ymf825Playing)
+  if (!ymf825Playing) {
+    delay(1);
+
+    if (!paused)
+      ymf825AllRelease();
+
+    paused = true;
     return true;
+  }
+
+  paused = false;
 
   if (ymf825NextFile) {
     ymf825NextFile = false;
