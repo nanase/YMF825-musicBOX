@@ -26,7 +26,6 @@ void setup() {
 void loop() {
   sdSeekNext();
   ymf825ChipUnselect();
-  ymf825ResetHardware();
   waitBegin();
 
   Serial.println("[INFO ] Playing Start");
