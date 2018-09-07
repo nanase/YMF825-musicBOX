@@ -1,3 +1,7 @@
+## 拡張子
+
+`.m25` で固定。
+
 ## ヘッダ
 
 なし。
@@ -27,7 +31,7 @@ Wait の分解能は 10ms。
 WOP0 | WOP1 | Operation
 -----|------|-----------
 `0`  | `0`  | Write
-`0`  | `1`  | Reserved
+`0`  | `1`  | (Reserved)
 `1`  | `0`  | BurstWrite to tone parameters
 `1`  | `1`  | BurstWrite to equalizer
 
@@ -39,6 +43,6 @@ SEL0 | SEL1 | WOP0 | WOP1 | Operation
 -----|------|------|------|----------
 `0`  | `0`  | n/a  | n/a  | Wait数 (1 〜 16)
 n/a  | n/a  | `0`  | `0`  | Address/Data 数。2 〜 32 バイト。
-n/a  | n/a  | `0`  | `1`  | Reserved
+n/a  | n/a  | `0`  | `1`  | (Reserved)
 n/a  | n/a  | `1`  | `0`  | 書き込みパート数。1 〜 16 パート、1 + 30 〜 480 + 5 バイト。
 n/a  | n/a  | `1`  | `1`  | LENx の値は無視。1 + 15バイト固定。
