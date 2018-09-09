@@ -43,11 +43,6 @@ bool progress() {
       if (!writeDADD((sdBuffer[sdPosition] & LENX_MASK) + 1))
         return false;
       break;
-
-    case WOPX_WRITE_SA_DD:
-      if (!writeSADD((sdBuffer[sdPosition] & LENX_MASK) + 1))
-        return false;
-      break;
       
     case WOPX_BURSTWRITE_TONE:
       if (!burstwriteTone(((int16_t)sdBuffer[sdPosition] & LENX_MASK) + 1))
@@ -74,24 +69,6 @@ static bool writeDADD(byte length) {
     ymf825Write(
       sdBuffer[sdPosition + i * 2 + 0],   // address
       sdBuffer[sdPosition + i * 2 + 1]    // data
-    );
-    ymf825ChipUnselect();
-  }
-
-  return true;
-}
-
-static bool writeSADD(byte length) {
-  sdReadBuffer(length + 1);
-
-  if (sdPosition == EOF)
-    return false;
-
-  for (byte i = 0; i < length; i++) {
-    ymf825ChipSelect();
-    ymf825Write(
-      sdBuffer[sdPosition + 0],       // address
-      sdBuffer[sdPosition + i + 1]    // data
     );
     ymf825ChipUnselect();
   }

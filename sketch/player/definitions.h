@@ -33,7 +33,7 @@ const byte SELX_LR_ENABLE         = B11000000;
 
 const byte WOPX_MASK              = B00110000;
 const byte WOPX_WRITE_DA_DD       = B00000000;
-const byte WOPX_WRITE_SA_DD       = B00010000;
+const byte WOPX_RESERVED          = B00010000;
 const byte WOPX_BURSTWRITE_TONE   = B00100000;
 const byte WOPX_BURSTWRITE_EQ     = B00110000;
 
