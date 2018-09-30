@@ -16,7 +16,10 @@ void setup() {
 
   ymf825ChipUnselect();
   ymf825ResetHardware();
-  sdInitialize();
+
+  if (!sdInitialize())
+    while (true)
+      delay(1);
 
   ymf825Pause();
   attachInterrupt(0, ymf825Pause, FALLING);
