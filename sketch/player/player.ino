@@ -2,24 +2,24 @@
 #include <SPI.h>
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("[DEBUG] Setup");
+  PSerial.begin(9600);
+  PSerial.println("[DEBUG] Setup");
 
   setupPort();
-  Serial.println("[DEBUG] Port setup");
+  PSerial.println("[DEBUG] Port setup");
   
   SPI.setBitOrder(MSBFIRST);
   SPI.setClockDivider(SPI_CLOCK_DIV4);
   SPI.setDataMode(SPI_MODE0);
   SPI.begin();
-  Serial.println("[DEBUG] SPI Begin");
+  PSerial.println("[DEBUG] SPI Begin");
 
   ymf825ChipUnselect();
   ymf825ResetHardware();
 
   if (!sdInitialize())
     while (true)
-      delay(1);
+      delay(1000);
 
   ymf825Pause();
   attachInterrupt(0, ymf825Pause, FALLING);
@@ -31,11 +31,10 @@ void loop() {
   ymf825ChipUnselect();
   waitBegin();
 
-  Serial.println("[INFO ] Playing Start");
+  PSerial.println("[INFO ] Playing Start");
 
-  while (progress()) {
+  while (progress())
     waitInvoke();
-  }
 
-  Serial.println("[INFO ] EOF");
+  PSerial.println("[INFO ] EOF");
 }

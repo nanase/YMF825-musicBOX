@@ -1,5 +1,8 @@
 #pragma once
 
+// -------------------------------------------------------------------------- //
+// Configurations
+
 // Hardware definitions
 
 const byte PIN_SD                 = 5;
@@ -46,3 +49,14 @@ const byte LENX_MASK              = B00001111;
 
 // min: 486
 const int32_t SD_BUFFER_SIZE      = 486;
+
+#define _USE_PETIT_SERIAL
+
+// -------------------------------------------------------------------------- //
+
+#ifdef _USE_PETIT_SERIAL
+  #include "PetitSerial.h"
+  PetitSerial PSerial;
+#else
+  #define PSerial Serial
+#endif

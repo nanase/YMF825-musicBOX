@@ -5,18 +5,18 @@ volatile bool ymf825NextFile = false;
 
 void ymf825Pause() {
   ymf825Playing = !ymf825Playing;
-  Serial.print("[INFO ] Push button: ");
-  Serial.println(ymf825Playing ? "PLAY" : "PAUSE");
+  PSerial.print("[INFO ] Push button: ");
+  PSerial.println(ymf825Playing ? "PLAY" : "PAUSE");
   waitBegin();
 }
 
 void ymf825Next() {
-  Serial.println("[INFO ] Push button: NEXT");
+  PSerial.println("[INFO ] Push button: NEXT");
   ymf825NextFile = true;
 }
 
 void ymf825AllRelease() {
-  Serial.print("[INFO ] All Release");
+  PSerial.print("[INFO ] All Release");
   
   for (byte i = 0; i < 16; i++)
   {
