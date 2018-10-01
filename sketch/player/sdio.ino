@@ -51,11 +51,17 @@ void sdSeekNext() {
   }
 
   while (!fileOpened) {
-    FRESULT res = pf_readdir(&root, &fileInfo);
-
-    if (res != FR_OK || fileInfo.fname[0] == 0) {
+    if (pf_readdir(&root, &fileInfo) != FR_OK || fileInfo.fname[0] == 0) {
       PSerial.println("[DEBUG] Rewind");
       delay(250);
+
+      if (pf_opendir(&root, "/") != FR_OK) {
+        PSerial.println("[ERROR] open root dir failed");
+
+        while (true)
+          delay(1000);
+      }
+
       continue;
     }
 
