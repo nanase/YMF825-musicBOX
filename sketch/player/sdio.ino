@@ -30,9 +30,10 @@ static int32_t sdBufferPosition = 0;
 bool sdInitialize() {
   PSerial.println("[DEBUG] SD initialization");
 
-  if (pf_mount(&fs) != FR_OK) {
+
+  while (pf_mount(&fs) != FR_OK) {
     PSerial.println("[ERROR] SD initialization failed");
-    return false;
+    delay(1000);
   }
 
   if (pf_opendir(&root, "/") != FR_OK) {
