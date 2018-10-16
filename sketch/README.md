@@ -17,8 +17,20 @@ Arduino 公式のIDEから player.ino を読み込み、コンパイルを行っ
 
 ### 使用ライブラリ
 
-- **[SdFat](https://github.com/greiman/SdFat)** - 1.0.7 以上
+- **[PetitFS](https://github.com/greiman/PetitFS)**
   - 公式の SD ライブラリは動作が不安定のため非推奨です。
+
+#### ヘッダファイルの書き換え
+
+PetitFSの以下のヘッダファイルを書き換えてください。
+この値は definitions.h の PIN_SD と同じ値にしてください。
+
+```c
+// PetitFS/src/pffArduino.h:7
+
+// SD chip select pin
+#define SD_CS_PIN 5
+```
 
 ## m25 フォーマット
 
