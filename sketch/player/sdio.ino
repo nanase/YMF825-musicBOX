@@ -6,15 +6,15 @@
 #endif
 
 #if (_USE_READ != 1)
-  #error("_USE_READ is disabled. Please enable SD_CS_PIN in pffconf.h!");
+  #error("_USE_READ is disabled. Please enable _USE_READ in pffconf.h!");
 #endif
 
 #if (_USE_DIR != 1)
-  #error("_USE_DIR is disabled. Please enable SD_CS_PIN in pffconf.h!");
+  #error("_USE_DIR is disabled. Please enable _USE_DIR in pffconf.h!");
 #endif
 
 #if (_USE_LSEEK != 1)
-  #error("_USE_LSEEK is disabled. Please enable SD_CS_PIN in pffconf.h!");
+  #error("_USE_LSEEK is disabled. Please enable _USE_LSEEK in pffconf.h!");
 #endif
 
 byte sdBuffer[SD_BUFFER_SIZE];
