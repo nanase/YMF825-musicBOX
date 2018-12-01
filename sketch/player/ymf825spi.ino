@@ -58,10 +58,3 @@ void ymf825ChipSelect() {
 void ymf825ChipUnselect() {
   disableSS();
 }
-
-void ymf825ResetHardware() {
-  disableIC();
-  enableIC();
-  delayMicroseconds(100);
-  disableIC();
-}

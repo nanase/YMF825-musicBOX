@@ -15,7 +15,6 @@ void setup() {
   PSerial.println("[DEBUG] SPI Begin");
 
   ymf825ChipUnselect();
-  ymf825ResetHardware();
 
   if (!sdInitialize())
     while (true)

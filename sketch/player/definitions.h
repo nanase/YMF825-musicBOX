@@ -14,11 +14,6 @@ const byte BIT_SS_LCH             = B10000000;
 const byte BIT_SS_RCH             = B01000000;
 const byte BIT_SS_LR              = BIT_SS_LCH | BIT_SS_RCH;
 
-#define PORT_IC                     PORTB
-#define PORT_IC_DDR_R               DDRB
-const byte PORT_IC_DDR_V          = B00000001;
-const byte BIT_IC                 = B00000001;
-
 const byte PIN_BT_PLAY            = 2;
 const byte PIN_BT_NEXT            = 3;
 const byte MODE_BT_PLAY           = INPUT_PULLUP;
