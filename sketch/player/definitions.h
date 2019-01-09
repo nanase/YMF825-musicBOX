@@ -16,8 +16,6 @@ const byte BIT_SS_LR              = BIT_SS_LCH | BIT_SS_RCH;
 
 const byte PIN_BT_PLAY            = 2;
 const byte PIN_BT_NEXT            = 3;
-const byte MODE_BT_PLAY           = INPUT_PULLUP;
-const byte MODE_BT_NEXT           = INPUT_PULLUP;
 
 // Software definitions
 
