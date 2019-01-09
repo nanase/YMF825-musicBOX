@@ -3,6 +3,35 @@
 volatile bool ymf825Playing = false;
 volatile bool ymf825NextFile = false;
 
+void ymf825Initialize() {
+  ymf825Write(0x1d, 0x01);
+  ymf825Write(0x02, 0x0f);
+  delay(10);
+  ymf825Write(0x00, 0x01);
+  ymf825Write(0x01, 0x00);
+  ymf825Write(0x1a, 0xa3);
+  delay(10);
+  ymf825Write(0x1a, 0x00);
+  delay(30);
+  ymf825Write(0x02, 0x00);
+  ymf825Write(0x19, 0xc0);
+  ymf825Write(0x1b, 0x3f);
+  ymf825Write(0x14, 0x00);
+  ymf825Write(0x03, 0x03);
+  ymf825Write(0x08, 0xf6);
+  delay(30);
+  ymf825Write(0x08, 0x00);
+  ymf825Write(0x09, 0xfc);
+  ymf825Write(0x0a, 0x00);
+  ymf825Write(0x17, 0x40);
+  ymf825Write(0x18, 0x00);
+  ymf825Write(0x03, 0x03);
+  ymf825Write(0x19, 0xa0);
+  ymf825Write(0x08, 0xf6);
+  delay(10);
+  ymf825Write(0x08, 0x00);
+}
+
 void ymf825Pause() {
   ymf825Playing = !ymf825Playing;
   PSerial.print("[INFO ] Push button: ");

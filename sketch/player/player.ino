@@ -14,12 +14,11 @@ void setup() {
   SPI.begin();
   PSerial.println("[DEBUG] SPI Begin");
 
-  ymf825ChipUnselect();
-
   if (!sdInitialize())
     while (true)
       delay(1000);
 
+  ymf825Initialize();
   lcdInitialize();
 
   ymf825Pause();
