@@ -20,6 +20,8 @@ void setup() {
     while (true)
       delay(1000);
 
+  lcdInitialize();
+
   ymf825Pause();
   attachInterrupt(0, ymf825Pause, FALLING);
   attachInterrupt(1, ymf825Next, FALLING);
