@@ -65,13 +65,13 @@ void sdSeekNext() {
       continue;
     }
 
-    if (!sdIsM25File()) {
-      PSerial.print("[DEBUG] Not m25 format: ");
-      PSerial.println(fileInfo.fname);
-      continue;
+    if (sdIsM25File()) {
+      fileOpened = true;
+      break;
     }
 
-    fileOpened = true;
+    PSerial.print("[DEBUG] Unknown format: ");
+    PSerial.println(fileInfo.fname);
   }
 
   PSerial.print("[DEBUG] Open: ");
