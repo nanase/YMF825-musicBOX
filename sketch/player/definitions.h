@@ -32,19 +32,9 @@ const byte LCD_PIN_D7 = A0;
 
 const byte WAIT_RESOLUTION = 10;
 
-const byte SELX_MASK       = B11000000;
-const byte SELX_WAIT       = B00000000;
-const byte SELX_LCH_ENABLE = B01000000;
-const byte SELX_RCH_ENABLE = B10000000;
-const byte SELX_LR_ENABLE  = B11000000;
-
-const byte WOPX_MASK            = B00110000;
-const byte WOPX_WRITE_DA_DD     = B00000000;
-const byte WOPX_RESERVED        = B00010000;
-const byte WOPX_BURSTWRITE_TONE = B00100000;
-const byte WOPX_BURSTWRITE_EQ   = B00110000;
-
-const byte LENX_MASK = B00001111;
+const byte YMF825_LCH_ENABLE  = B00000001;
+const byte YMF825_RCH_ENABLE  = B00000010;
+const byte YMF825_BOTH_ENABLE = B00000011;
 
 // Sketch definitions
 

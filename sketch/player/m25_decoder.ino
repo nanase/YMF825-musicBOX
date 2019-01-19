@@ -1,12 +1,31 @@
-byte selx          = SELX_LR_ENABLE;
-static bool paused = false;
+const byte SELX_MASK            = B11000000;
+const byte SELX_WAIT            = B00000000;
+const byte SELX_LCH_ENABLE      = B01000000;
+const byte SELX_RCH_ENABLE      = B10000000;
+const byte SELX_LR_ENABLE       = B11000000;
+const byte WOPX_MASK            = B00110000;
+const byte WOPX_WRITE_DA_DD     = B00000000;
+const byte WOPX_RESERVED        = B00010000;
+const byte WOPX_BURSTWRITE_TONE = B00100000;
+const byte WOPX_BURSTWRITE_EQ   = B00110000;
+const byte LENX_MASK            = B00001111;
 
+#define M25SelxToTargetChip(x) (x >> 6)
+
+static bool paused = false;
 extern int16_t sdPosition;
 extern byte sdBuffer[SD_BUFFER_SIZE];
 extern volatile bool ymf825Playing;
 extern volatile bool ymf825NextFile;
 
-bool progress() {
+class M25Decoder : public Decoder {
+public:
+  virtual bool progress();
+};
+
+bool M25Decoder::progress() {
+  byte selx;
+
   if (!ymf825Playing) {
     delay(1);
 
@@ -36,6 +55,8 @@ bool progress() {
     waitAdd((sdBuffer[sdPosition] & LENX_MASK) + 1);
     return true;
   }
+
+  ymf825ChangeTargetChip(M25SelxToTargetChip(selx));
 
   // WOPx
   switch (sdBuffer[sdPosition] & WOPX_MASK) {

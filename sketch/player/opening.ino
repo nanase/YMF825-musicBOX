@@ -1,3 +1,4 @@
+#include "decoder.h"
 #include <avr/pgmspace.h>
 
 static const unsigned char __burstWriteData_0[] PROGMEM = {
@@ -7,6 +8,8 @@ static const unsigned char __burstWriteData_3[] PROGMEM = {
     0x81, 0x00, 0x00, 0xf0, 0xf0, 0x4f, 0xa8, 0x66, 0x25, 0x00, 0xf1, 0xf3,
     0x7f, 0x00, 0x30, 0x11, 0x00, 0xf0, 0xf4, 0x2f, 0x54, 0x00, 0x00, 0x00,
     0xf0, 0xf4, 0xbf, 0x94, 0x00, 0x10, 0x00, 0x80, 0x03, 0x81, 0x80};
+
+extern Decoder *decoder;
 
 static void progmemReadBuffer(byte *buffer, const void *progmem,
                               uint16_t size) {
@@ -53,11 +56,11 @@ void opening() {
   ymf825Write(0x08, 0x16);
   ymf825Write(0x08, 0x00);
   ymf825Write(0x11, 0x01);
-  selx = SELX_LCH_ENABLE;
+  ymf825ChangeTargetChip(YMF825_LCH_ENABLE);
   ymf825Write(0x0c, 0x60);
-  selx = SELX_RCH_ENABLE;
+  ymf825ChangeTargetChip(YMF825_RCH_ENABLE);
   ymf825Write(0x0c, 0x7c);
-  selx = SELX_LR_ENABLE;
+  ymf825ChangeTargetChip(YMF825_BOTH_ENABLE);
   ymf825Write(0x12, 0x08);
   ymf825Write(0x13, 0x00);
   ymf825Write(0x10, 0x3d);
@@ -75,11 +78,11 @@ void opening() {
   ymf825Write(0x08, 0x16);
   ymf825Write(0x08, 0x00);
   ymf825Write(0x11, 0x01);
-  selx = SELX_LCH_ENABLE;
+  ymf825ChangeTargetChip(YMF825_LCH_ENABLE);
   ymf825Write(0x0c, 0x7c);
-  selx = SELX_RCH_ENABLE;
+  ymf825ChangeTargetChip(YMF825_RCH_ENABLE);
   ymf825Write(0x0c, 0x60);
-  selx = SELX_LR_ENABLE;
+  ymf825ChangeTargetChip(YMF825_BOTH_ENABLE);
   ymf825Write(0x12, 0x08);
   ymf825Write(0x13, 0x00);
   ymf825Write(0x10, 0x25);

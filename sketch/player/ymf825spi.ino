@@ -1,7 +1,10 @@
+#include "decoder.h"
 #include <SPI.h>
 
+extern Decoder *decoder;
 volatile bool ymf825Playing  = false;
 volatile bool ymf825NextFile = false;
+static byte ymf825TargetChip = YMF825_BOTH_ENABLE;
 
 void ymf825Initialize() {
   ymf825Write(0x1d, 0x01);
@@ -74,10 +77,14 @@ void ymf825BurstWrite(byte address, byte *data, uint16_t size) {
   ymf825ChipUnselect();
 }
 
+void ymf825ChangeTargetChip(byte targetChip) {
+  ymf825TargetChip = targetChip;
+}
+
 void ymf825ChipSelect() {
-  if (selx == SELX_LR_ENABLE)
+  if (ymf825TargetChip == YMF825_BOTH_ENABLE)
     enableLRch();
-  else if (selx == SELX_LCH_ENABLE)
+  else if (ymf825TargetChip == YMF825_LCH_ENABLE)
     enableLch();
   else
     enableRch();

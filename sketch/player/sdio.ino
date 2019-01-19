@@ -1,4 +1,5 @@
 #include "PetitFS.h"
+#include "decoder.h"
 #include "definitions.h"
 
 #if (SD_CS_PIN != PIN_SD)
@@ -67,6 +68,7 @@ void sdSeekNext() {
 
     if (sdIsM25File()) {
       fileOpened = true;
+      decoder    = new M25Decoder();
       break;
     }
 

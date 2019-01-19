@@ -1,5 +1,8 @@
+#include "decoder.h"
 #include "definitions.h"
 #include <SPI.h>
+
+Decoder *decoder;
 
 void setup() {
   PSerial.begin(9600);
@@ -40,4 +43,5 @@ void loop() {
     waitInvoke();
 
   PSerial.println("[INFO ] EOF");
+  delete decoder;
 }
