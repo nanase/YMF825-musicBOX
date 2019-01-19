@@ -12,11 +12,8 @@ const byte LENX_MASK            = B00001111;
 
 #define M25SelxToTargetChip(x) (x >> 6)
 
-static bool paused = false;
 extern int16_t sdPosition;
 extern byte sdBuffer[SD_BUFFER_SIZE];
-extern volatile bool ymf825Playing;
-extern volatile bool ymf825NextFile;
 
 class M25Decoder : public Decoder {
 public:
@@ -25,23 +22,6 @@ public:
 
 bool M25Decoder::progress() {
   byte selx;
-
-  if (!ymf825Playing) {
-    delay(1);
-
-    if (!paused)
-      ymf825AllRelease();
-
-    paused = true;
-    return true;
-  }
-
-  paused = false;
-
-  if (ymf825NextFile) {
-    ymf825NextFile = false;
-    return false;
-  }
 
   sdReadBuffer(1);
 

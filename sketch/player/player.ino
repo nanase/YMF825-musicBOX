@@ -3,6 +3,8 @@
 #include <SPI.h>
 
 Decoder *decoder;
+extern volatile bool ymf825Playing;
+extern volatile bool ymf825NextFile;
 
 void setup() {
   PSerial.begin(9600);
@@ -29,18 +31,38 @@ void setup() {
   attachInterrupt(1, ymf825Next, FALLING);
 
   opening();
-
 }
 
 void loop() {
+  static bool paused = false;
+  byte canProgress;
+
   sdSeekNext();
   ymf825ChipUnselect();
   waitBegin();
 
   PSerial.println("[INFO ] Playing Start");
 
-  while (progress())
+  do {
+    if (!ymf825Playing) {
+      delay(1);
+
+      if (!paused)
+        ymf825AllRelease();
+
+      paused      = true;
+      canProgress = true;
+    } else {
+      paused = false;
+
+      if (ymf825NextFile) {
+        ymf825NextFile = false;
+        canProgress    = false;
+      } else
+        canProgress = decoder->progress();
+    }
     waitInvoke();
+  } while (canProgress);
 
   PSerial.println("[INFO ] EOF");
   delete decoder;
