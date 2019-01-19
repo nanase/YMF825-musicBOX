@@ -15,11 +15,6 @@ const byte LENX_MASK            = B00001111;
 extern int16_t sdPosition;
 extern byte sdBuffer[SD_BUFFER_SIZE];
 
-class M25Decoder : public Decoder {
-public:
-  virtual bool progress();
-};
-
 bool M25Decoder::progress() {
   byte selx;
 
@@ -57,6 +52,11 @@ bool M25Decoder::progress() {
   }
 
   return true;
+}
+
+bool M25Decoder::IsM25File(const char *filename) {
+  char *extension = strrchr(filename, '.');
+  return extension && strcmp(extension, ".M25") == 0;
 }
 
 static bool writeDADD(byte length) {

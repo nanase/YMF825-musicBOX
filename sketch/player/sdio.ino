@@ -66,7 +66,7 @@ void sdSeekNext() {
       continue;
     }
 
-    if (sdIsM25File()) {
+    if (M25Decoder::IsM25File(fileInfo.fname)) {
       fileOpened = true;
       decoder    = new M25Decoder();
       break;
@@ -89,11 +89,6 @@ void sdSeekNext() {
   sdSeekPosition   = 0;
   sdBufferPosition = 0;
   sdRead();
-}
-
-static bool sdIsM25File() {
-  char *extension = strrchr(fileInfo.fname, '.');
-  return extension && strcmp(extension, ".M25") == 0;
 }
 
 static bool sdRead() {

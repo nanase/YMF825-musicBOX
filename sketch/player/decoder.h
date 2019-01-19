@@ -8,3 +8,9 @@ public:
   virtual ~Decoder() {
   }
 };
+
+class M25Decoder : public Decoder {
+public:
+  virtual bool progress();
+  static bool IsM25File(const char *filename);
+};
