@@ -1,6 +1,6 @@
 #include <SPI.h>
 
-volatile bool ymf825Playing = false;
+volatile bool ymf825Playing  = false;
 volatile bool ymf825NextFile = false;
 
 void ymf825Initialize() {
@@ -46,14 +46,13 @@ void ymf825Next() {
 
 void ymf825AllRelease() {
   PSerial.print("[INFO ] All Release");
-  
-  for (byte i = 0; i < 16; i++)
-  {
+
+  for (byte i = 0; i < 16; i++) {
     enableLRch();
     SPI.transfer(0x0b);
     SPI.transfer(i);
     disableSS();
-    
+
     enableLRch();
     SPI.transfer(0x0f);
     SPI.transfer(i);
@@ -68,7 +67,7 @@ void ymf825Write(byte address, byte data) {
   ymf825ChipUnselect();
 }
 
-void ymf825BurstWrite(byte address, byte* data, uint16_t size) {
+void ymf825BurstWrite(byte address, byte *data, uint16_t size) {
   ymf825ChipSelect();
   SPI.transfer(address);
   SPI.transfer(data, size);

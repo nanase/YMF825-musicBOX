@@ -1,20 +1,20 @@
-#include "definitions.h"
 #include "PetitFS.h"
+#include "definitions.h"
 
 #if (SD_CS_PIN != PIN_SD)
-  #error("SD_CS_PIN is not equal PIN_SD. Please edit SD_CS_PIN in pffArduino.h!");
+#error("SD_CS_PIN is not equal PIN_SD. Please edit SD_CS_PIN in pffArduino.h!");
 #endif
 
 #if (_USE_READ != 1)
-  #error("_USE_READ is disabled. Please enable _USE_READ in pffconf.h!");
+#error("_USE_READ is disabled. Please enable _USE_READ in pffconf.h!");
 #endif
 
 #if (_USE_DIR != 1)
-  #error("_USE_DIR is disabled. Please enable _USE_DIR in pffconf.h!");
+#error("_USE_DIR is disabled. Please enable _USE_DIR in pffconf.h!");
 #endif
 
 #if (_USE_LSEEK != 1)
-  #error("_USE_LSEEK is disabled. Please enable _USE_LSEEK in pffconf.h!");
+#error("_USE_LSEEK is disabled. Please enable _USE_LSEEK in pffconf.h!");
 #endif
 
 byte sdBuffer[SD_BUFFER_SIZE];
@@ -23,13 +23,12 @@ int16_t sdPosition = 0;
 static FATFS fs;
 static FILINFO fileInfo;
 static DIR root;
-static bool fileOpened = false;
-static int32_t sdSeekPosition = 0;
+static bool fileOpened          = false;
+static int32_t sdSeekPosition   = 0;
 static int32_t sdBufferPosition = 0;
 
 bool sdInitialize() {
   PSerial.println("[DEBUG] SD initialization");
-
 
   while (pf_mount(&fs) != FR_OK) {
     PSerial.println("[ERROR] SD initialization failed");
@@ -85,13 +84,13 @@ void sdSeekNext() {
       delay(1000);
   }
 
-  sdSeekPosition = 0;
+  sdSeekPosition   = 0;
   sdBufferPosition = 0;
   sdRead();
 }
 
 static bool sdIsM25File() {
-  char* extension = strrchr(fileInfo.fname, '.');
+  char *extension = strrchr(fileInfo.fname, '.');
   return extension && strcmp(extension, ".M25") == 0;
 }
 
@@ -116,10 +115,10 @@ void sdReadBuffer(int16_t size) {
     sdSeekPosition += sdBufferPosition;
 
     sdBufferPosition = size;
-    sdPosition = sdRead() ? 0 : EOF;
+    sdPosition       = sdRead() ? 0 : EOF;
     return;
   }
-  
+
   sdPosition = sdBufferPosition;
   sdBufferPosition += size;
 }

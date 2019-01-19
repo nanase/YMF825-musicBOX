@@ -1,15 +1,15 @@
 #include <LiquidCrystal.h>
 
-LiquidCrystal lcd(LCD_PIN_RS, LCD_PIN_E,
-                  LCD_PIN_D4, LCD_PIN_D5, LCD_PIN_D6, LCD_PIN_D7);
+LiquidCrystal lcd(LCD_PIN_RS, LCD_PIN_E, LCD_PIN_D4, LCD_PIN_D5, LCD_PIN_D6,
+                  LCD_PIN_D7);
 
-static uint8_t fade_target_r = 0;
-static uint8_t fade_target_g = 0;
-static uint8_t fade_target_b = 0;
-static int32_t fade_current_r = 0;
-static int32_t fade_current_g = 0;
-static int32_t fade_current_b = 0;
-static int32_t fade_speed = 100;
+static uint8_t fade_target_r     = 0;
+static uint8_t fade_target_g     = 0;
+static uint8_t fade_target_b     = 0;
+static int32_t fade_current_r    = 0;
+static int32_t fade_current_g    = 0;
+static int32_t fade_current_b    = 0;
+static int32_t fade_speed        = 100;
 const static int32_t FADE_FACTOR = 100;
 
 void lcdInitialize() {
@@ -31,12 +31,12 @@ void lcdSetFadeColor(uint8_t r, uint8_t g, uint8_t b) {
   fade_target_b = b;
 }
 
-static void fading(int32_t* current, int32_t target) {
+static void fading(int32_t *current, int32_t target) {
   target *= FADE_FACTOR;
 
   if ((*current < target && (*current += fade_speed) > target) ||
       (*current > target && (*current -= fade_speed) < target))
-      *current = target;
+    *current = target;
 }
 
 void lcdFade() {

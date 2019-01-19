@@ -20,7 +20,7 @@ void setupPort() {
   pinMode(PIN_BT_NEXT, INPUT_PULLUP);
 }
 
-void enableLch()  { PORT_SS &= ~BIT_SS_LCH; }
-void enableRch()  { PORT_SS &= ~BIT_SS_RCH; }
-void enableLRch() { PORT_SS &= ~BIT_SS_LR;  }
-void disableSS()  { PORT_SS |=  BIT_SS_LR;  }
+void enableLch() { PORT_SS &= ~BIT_SS_LCH; }
+void enableRch() { PORT_SS &= ~BIT_SS_RCH; }
+void enableLRch() { PORT_SS &= ~BIT_SS_LR; }
+void disableSS() { PORT_SS |= BIT_SS_LR; }
