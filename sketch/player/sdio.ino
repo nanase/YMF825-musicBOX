@@ -72,6 +72,17 @@ void sdSeekNext() {
       break;
     }
 
+    if (pf_open(fileInfo.fname) == FR_OK) {
+      sdSeekPosition   = 0;
+      sdBufferPosition = 0;
+
+      if (JpmDecoder::IsJpmFile(fileInfo.fname)) {
+        fileOpened = true;
+        decoder    = new JpmDecoder();
+        break;
+      }
+    }
+
     PSerial.print("[DEBUG] Unknown format: ");
     PSerial.println(fileInfo.fname);
   }

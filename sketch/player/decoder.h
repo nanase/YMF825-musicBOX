@@ -14,3 +14,9 @@ public:
   virtual bool progress();
   static bool IsM25File(const char *filename);
 };
+
+class JpmDecoder : public Decoder {
+public:
+  virtual bool progress();
+  static bool IsJpmFile(const char *filename);
+};
