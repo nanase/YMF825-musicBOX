@@ -24,6 +24,9 @@ void setup() {
   ymf825Pause();
   attachInterrupt(0, ymf825Pause, FALLING);
   attachInterrupt(1, ymf825Next, FALLING);
+
+  opening();
+
 }
 
 void loop() {
