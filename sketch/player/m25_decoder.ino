@@ -1,16 +1,4 @@
-const byte SELX_MASK            = B11000000;
-const byte SELX_WAIT            = B00000000;
-const byte SELX_LCH_ENABLE      = B01000000;
-const byte SELX_RCH_ENABLE      = B10000000;
-const byte SELX_LR_ENABLE       = B11000000;
-const byte WOPX_MASK            = B00110000;
-const byte WOPX_WRITE_DA_DD     = B00000000;
-const byte WOPX_RESERVED        = B00010000;
-const byte WOPX_BURSTWRITE_TONE = B00100000;
-const byte WOPX_BURSTWRITE_EQ   = B00110000;
-const byte LENX_MASK            = B00001111;
-
-#define M25SelxToTargetChip(x) (x >> 6)
+#include "m25_decoder.h"
 
 extern int16_t sdPosition;
 extern byte sdBuffer[SD_BUFFER_SIZE];
@@ -23,30 +11,30 @@ bool M25Decoder::progress() {
   if (sdPosition == EOF)
     return false;
 
-  selx = sdBuffer[sdPosition] & SELX_MASK;
+  selx = sdBuffer[sdPosition] & M25_SELX_MASK;
 
   // Wait
-  if (selx == SELX_WAIT) {
-    waitAdd((sdBuffer[sdPosition] & LENX_MASK) + 1);
+  if (selx == M25_SELX_WAIT) {
+    waitAdd((sdBuffer[sdPosition] & M25_LENX_MASK) + 1);
     return true;
   }
 
   ymf825ChangeTargetChip(M25SelxToTargetChip(selx));
 
   // WOPx
-  switch (sdBuffer[sdPosition] & WOPX_MASK) {
-  case WOPX_WRITE_DA_DD:
-    if (!writeDADD((sdBuffer[sdPosition] & LENX_MASK) + 1))
+  switch (sdBuffer[sdPosition] & M25_WOPX_MASK) {
+  case M25_WOPX_WRITE_DA_DD:
+    if (!m25WriteDADD((sdBuffer[sdPosition] & M25_LENX_MASK) + 1))
       return false;
     break;
 
-  case WOPX_BURSTWRITE_TONE:
-    if (!burstwriteTone(((int16_t)sdBuffer[sdPosition] & LENX_MASK) + 1))
+  case M25_WOPX_BURSTWRITE_TONE:
+    if (!m25BurstwriteTone(((int16_t)sdBuffer[sdPosition] & M25_LENX_MASK) + 1))
       return false;
     break;
 
-  case WOPX_BURSTWRITE_EQ:
-    if (!burstwriteEq())
+  case M25_WOPX_BURSTWRITE_EQ:
+    if (!m25BurstwriteEq())
       return false;
     break;
   }
@@ -59,7 +47,7 @@ bool M25Decoder::IsM25File(const char *filename) {
   return extension && strcmp(extension, ".M25") == 0;
 }
 
-static bool writeDADD(byte length) {
+static bool m25WriteDADD(byte length) {
   sdReadBuffer(length * 2);
 
   if (sdPosition == EOF)
@@ -77,7 +65,7 @@ static bool writeDADD(byte length) {
   return true;
 }
 
-static bool burstwriteTone(int16_t length) {
+static bool m25BurstwriteTone(int16_t length) {
   sdReadBuffer(length * 30 + 6);
 
   if (sdPosition == EOF)
@@ -93,7 +81,7 @@ static bool burstwriteTone(int16_t length) {
   return true;
 }
 
-static bool burstwriteEq() {
+static bool m25BurstwriteEq() {
   sdReadBuffer(16);
 
   if (sdPosition == EOF)
