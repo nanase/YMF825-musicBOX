@@ -155,5 +155,4 @@ void opening() {
   ymf825Write(0x0b, 0x03);
   ymf825Write(0x0f, 0x00);
   delay(1000);
-  lcdSetFadeSpeed(75);
 }
