@@ -90,18 +90,18 @@ void opening() {
   }
   // phase 3-3: 230ms
   lcd.setCursor(0, 0);
-  lcd.write('*');
+  lcdWrite('*');
   lcd.setCursor(15, 0);
-  lcd.write('*');
+  lcdWrite('*');
   lcd.setCursor(2, 0);
   delay(50);
-  lcd.write('J');
+  lcdWrite('J');
   delay(50);
-  lcd.write('a');
+  lcdWrite('a');
   delay(50);
-  lcd.write('p');
+  lcdWrite('p');
   delay(50);
-  lcd.write('a');
+  lcdWrite('a');
   delay(30);
 
   // phase 4-1: voice 3 set
@@ -117,21 +117,21 @@ void opening() {
   ymf825Write(0x0e, 0x65);
   ymf825Write(0x0f, 0x40);
   delay(20);
-  lcd.write('r');
+  lcdWrite('r');
   delay(50);
-  lcd.write('i');
+  lcdWrite('i');
   delay(50);
-  lcd.write(' ');
+  lcdWrite(' ');
   delay(50);
-  lcd.write('o');
+  lcdWrite('o');
   delay(50);
-  lcd.write('r');
+  lcdWrite('r');
   delay(50);
-  lcd.write('g');
+  lcdWrite('g');
   delay(50);
-  lcd.write('e');
+  lcdWrite('e');
   delay(50);
-  lcd.write('l');
+  lcdWrite('l');
   delay(40);
 
   // phase 5:
@@ -139,7 +139,7 @@ void opening() {
   lcd.setCursor(8 - sizeof(VERSION_STRING) / 2, 1);
 
   for (uint8_t i = 0; i < sizeof(VERSION_STRING) - 1; i++) {
-    lcd.write(VERSION_STRING[i]);
+    lcdWrite(VERSION_STRING[i]);
     delay(50);
   }
 

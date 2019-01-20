@@ -34,17 +34,16 @@ void ymf825Initialize() {
 
 void ymf825Pause() {
   ymf825Playing = !ymf825Playing;
-  PSerial.print("[INFO ] Push button: ");
-  PSerial.println(ymf825Playing ? "PLAY" : "PAUSE");
+  debugInfo(ymf825Playing ? "Push: PLAY" : "Push: PAUSE");
 }
 
 void ymf825Next() {
-  PSerial.println("[INFO ] Push button: NEXT");
+  debugInfo("Push: NEXT");
   ymf825NextFile = true;
 }
 
 void ymf825AllRelease() {
-  PSerial.print("[INFO ] All Release");
+  debugInfo("All Release");
 
   for (byte i = 0; i < 16; i++) {
     enableLRch();

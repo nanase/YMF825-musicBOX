@@ -9,15 +9,15 @@ static int32_t sdSeekPosition   = 0;
 static int32_t sdBufferPosition = 0;
 
 bool sdInitialize() {
-  PSerial.println("[DEBUG] SD initialization");
+  debugInfo("SD init");
 
   while (pf_mount(&fs) != FR_OK) {
-    PSerial.println("[ERROR] SD initialization failed");
+    debugWarn("SD init failed");
     delay(1000);
   }
 
   if (pf_opendir(&root, "/") != FR_OK) {
-    PSerial.println("[ERROR] open root dir failed");
+    debugWarn("open / failed");
     return false;
   }
 
@@ -25,23 +25,15 @@ bool sdInitialize() {
 }
 
 void sdSeekNext() {
-  if (fileOpened) {
-    PSerial.print("[DEBUG] Close: ");
-    PSerial.println(fileInfo.fname);
-    fileOpened = false;
-  }
+  fileOpened = false;
 
   while (!fileOpened) {
     if (pf_readdir(&root, &fileInfo) != FR_OK || fileInfo.fname[0] == 0) {
-      PSerial.println("[DEBUG] Rewind");
+      debugInfo("Rewind");
       delay(250);
 
-      if (pf_opendir(&root, "/") != FR_OK) {
-        PSerial.println("[ERROR] open root dir failed");
-
-        while (true)
-          delay(1000);
-      }
+      if (pf_opendir(&root, "/") != FR_OK)
+        debugError("open / failed");
 
       continue;
     }
@@ -62,19 +54,13 @@ void sdSeekNext() {
         break;
       }
     }
-
-    PSerial.print("[DEBUG] Unknown format: ");
-    PSerial.println(fileInfo.fname);
   }
 
-  PSerial.print("[DEBUG] Open: ");
-  PSerial.println(fileInfo.fname);
+  debugInfo(fileInfo.fname);
 
   if (pf_open(fileInfo.fname) != FR_OK) {
-    PSerial.print("[ERROR] Open failed!");
-
-    while (true)
-      delay(1000);
+    debugWarn(fileInfo.fname);
+    return false;
   }
 
   sdSeekPosition   = 0;
@@ -85,12 +71,8 @@ void sdSeekNext() {
 static bool sdRead() {
   uint16_t i;
 
-  if (pf_lseek(sdSeekPosition) != FR_OK) {
-    PSerial.println("[ERROR] Seek failed");
-
-    while (true)
-      delay(1000);
-  }
+  if (pf_lseek(sdSeekPosition) != FR_OK)
+    debugError("Seek failed");
 
   for (i = 0; i < SD_BUFFER_SIZE; i++)
     sdBuffer[i] = 0x00;

@@ -6,12 +6,9 @@ extern volatile bool ymf825Playing;
 extern volatile bool ymf825NextFile;
 
 void setup() {
-  PSerial.begin(9600);
-  PSerial.println("[DEBUG] Setup");
-
+  lcdInitialize();
+  debugInitialize();
   setupPort();
-  PSerial.println("[DEBUG] Port setup");
-
   SPI.setBitOrder(MSBFIRST);
   SPI.setClockDivider(SPI_CLOCK_DIV4);
   SPI.setDataMode(SPI_MODE0);
@@ -23,13 +20,13 @@ void setup() {
       delay(1000);
 
   ymf825Initialize();
-  lcdInitialize();
 
   ymf825Pause();
   attachInterrupt(0, ymf825Pause, FALLING);
   attachInterrupt(1, ymf825Next, FALLING);
 
   opening();
+  lcdSetFadeColor(255, 0, 0);
 }
 
 void loop() {
@@ -38,7 +35,6 @@ void loop() {
 
   sdSeekNext();
   ymf825ChipUnselect();
-  PSerial.println("[INFO ] Playing Start");
   waitBegin();
 
   do {
@@ -63,6 +59,6 @@ void loop() {
     waitInvoke();
   } while (canProgress);
 
-  PSerial.println("[INFO ] EOF");
+  debugInfo("EOF");
   delete decoder;
 }

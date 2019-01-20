@@ -18,6 +18,8 @@ void setupPort() {
   PORT_SS_DDR_R |= PORT_SS_DDR_V;
   pinMode(PIN_BT_PLAY, INPUT_PULLUP);
   pinMode(PIN_BT_NEXT, INPUT_PULLUP);
+
+  debugInfo("Port setup");
 }
 
 void enableLch() { PORT_SS &= ~BIT_SS_LCH; }

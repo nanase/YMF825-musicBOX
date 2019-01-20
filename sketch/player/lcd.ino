@@ -50,3 +50,15 @@ void lcdFade() {
 void lcdSetFadeSpeed(int32_t speed) {
   fade_speed = speed;
 }
+
+void lcdPrint(const char *text) {
+#ifndef DEBUG_MODE
+  lcd.print(text);
+#endif
+}
+
+void lcdWrite(char character) {
+#ifndef DEBUG_MODE
+  lcd.write(character);
+#endif
+}

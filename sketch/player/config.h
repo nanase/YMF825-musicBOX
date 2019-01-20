@@ -32,3 +32,6 @@ const byte LCD_PIN_D7 = A0;
 const int32_t SD_BUFFER_SIZE = 1024;
 
 const char VERSION_STRING[] = "ver.2.0b";
+
+// #define DEBUG_MODE
+#define HALT_ON_ERROR
