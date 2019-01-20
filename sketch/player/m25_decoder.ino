@@ -6,9 +6,7 @@ extern byte sdBuffer[SD_BUFFER_SIZE];
 bool M25Decoder::progress() {
   byte selx;
 
-  sdReadBuffer(1);
-
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(1))
     return false;
 
   selx = sdBuffer[sdPosition] & M25_SELX_MASK;
@@ -48,9 +46,7 @@ bool M25Decoder::IsM25File(const char *filename) {
 }
 
 static bool m25WriteDADD(byte length) {
-  sdReadBuffer(length * 2);
-
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(length * 2))
     return false;
 
   for (byte i = 0; i < length; i++) {
@@ -66,9 +62,7 @@ static bool m25WriteDADD(byte length) {
 }
 
 static bool m25BurstwriteTone(int16_t length) {
-  sdReadBuffer(length * 30 + 6);
-
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(length * 30 + 6))
     return false;
 
   ymf825ChipSelect();
@@ -82,9 +76,7 @@ static bool m25BurstwriteTone(int16_t length) {
 }
 
 static bool m25BurstwriteEq() {
-  sdReadBuffer(16);
-
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(16))
     return false;
 
   ymf825ChipSelect();

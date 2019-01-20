@@ -5,9 +5,7 @@ extern byte sdBuffer[SD_BUFFER_SIZE];
 extern LiquidCrystal lcd;
 
 bool JpmDecoder::progress() {
-  sdReadBuffer(1);
-
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(1))
     return false;
 
   switch (sdBuffer[sdPosition] & JPM_WOPX_MASK) {
@@ -41,9 +39,7 @@ bool JpmDecoder::IsJpmFile(const char *filename) {
   if (extension && strcmp(extension, ".JPM") != 0)
     return false;
 
-  sdReadBuffer(4);
-
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(4))
     return false;
 
   return (sdBuffer[0] == 'j' &&
@@ -62,9 +58,8 @@ static bool JpmWriteOrWait() {
   }
 
   ymf825ChangeTargetChip(JpmSelxToTargetChip(selx));
-  sdReadBuffer(length * 2);
 
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(length * 2))
     return false;
 
   for (byte i = 0; i < length; i++) {
@@ -103,9 +98,8 @@ static bool JpmBurstwriteTone() {
   int16_t length = sdBuffer[sdPosition] & JPM_LENX_MASK;
 
   ymf825ChangeTargetChip(JpmSelxToTargetChip(sdBuffer[sdPosition] & JPM_SELX_MASK));
-  sdReadBuffer(length * 30 + 6);
 
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(length * 30 + 6))
     return false;
 
   ymf825ChipSelect();
@@ -120,9 +114,8 @@ static bool JpmBurstwriteTone() {
 
 static bool JpmBurstwriteEq() {
   ymf825ChangeTargetChip(JpmSelxToTargetChip(sdBuffer[sdPosition] & JPM_SELX_MASK));
-  sdReadBuffer(16);
 
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(16))
     return false;
 
   ymf825ChipSelect();
@@ -138,9 +131,8 @@ static bool JpmBurstwriteEq() {
 static bool JpmLcdWrite() {
   static char charBuffer[17];
   byte length = (sdBuffer[sdPosition] & JPM_LENX_MASK) + 1;
-  sdReadBuffer(length);
 
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(length))
     return false;
 
   memcpy(charBuffer, &sdBuffer[sdPosition], length);
@@ -204,9 +196,7 @@ static bool JpmLcdSetPosition(byte line) {
 }
 
 static bool JpmLcdSetBackLight() {
-  sdReadBuffer(3);
-
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(3))
     return false;
 
   lcdSetFadeColor(sdBuffer[sdPosition + 0],  // R
@@ -218,9 +208,8 @@ static bool JpmLcdSetBackLight() {
 
 static bool JpmLcdCreateChar(byte num) {
   static char cgBuffer[8];
-  sdReadBuffer(7);
 
-  if (sdPosition == EOF)
+  if (!sdReadBuffer(7))
     return false;
 
   memcpy(cgBuffer, &sdBuffer[sdPosition], 7);

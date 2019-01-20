@@ -98,15 +98,16 @@ static bool sdRead() {
   return pf_read(sdBuffer, (uint16_t)SD_BUFFER_SIZE, &i) == FR_OK && i > 0;
 }
 
-void sdReadBuffer(int16_t size) {
+bool sdReadBuffer(int16_t size) {
   if (SD_BUFFER_SIZE - sdBufferPosition < size) {
     sdSeekPosition += sdBufferPosition;
 
     sdBufferPosition = size;
     sdPosition       = sdRead() ? 0 : EOF;
-    return;
+  } else {
+    sdPosition = sdBufferPosition;
+    sdBufferPosition += size;
   }
 
-  sdPosition = sdBufferPosition;
-  sdBufferPosition += size;
+  return sdPosition != EOF;
 }
