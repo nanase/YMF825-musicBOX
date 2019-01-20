@@ -12,22 +12,22 @@ bool JpmDecoder::progress() {
 
   switch (sdBuffer[sdPosition] & JPM_WOPX_MASK) {
   case JPM_WOPX_WRITE_WAIT:
-    if (!writeOrWait())
+    if (!JpmWriteOrWait())
       return false;
     break;
 
   case JPM_WOPX_LCD_OPERATE:
-    if (!lcdControl())
+    if (!JpmLcdOperate())
       return false;
     break;
 
   case JPM_WOPX_BURSTWRITE_TONE:
-    if (!burstwriteTone())
+    if (!JpmBurstwriteTone())
       return false;
     break;
 
   case JPM_WOPX_BURSTWRITE_EQ:
-    if (!burstwriteEq())
+    if (!JpmBurstwriteEq())
       return false;
     break;
   }
@@ -52,7 +52,7 @@ bool JpmDecoder::IsJpmFile(const char *filename) {
           sdBuffer[3] == 0); // Version
 }
 
-static bool writeOrWait() {
+static bool JpmWriteOrWait() {
   byte selx   = sdBuffer[sdPosition] & JPM_SELX_MASK;
   byte length = (sdBuffer[sdPosition] & JPM_LENX_MASK) + 1;
 
@@ -79,23 +79,27 @@ static bool writeOrWait() {
   return true;
 }
 
-static bool lcdOperate() {
+static bool JpmLcdOperate() {
   switch (sdBuffer[sdPosition] & JPM_SELX_MASK) {
   case JPM_SELX_LCD_WRITE:
-    return lcdWrite();
+    return JpmLcdWrite();
 
   case JPM_SELX_LCD_CONTROL:
-    return lcdOperate();
+    return JpmLcdControl();
 
   case JPM_SELX_LCD_POSITION0:
-    return lcdSetPosition(0);
+    return JpmLcdSetPosition(0);
 
   case JPM_SELX_LCD_POSITION1:
-    return lcdSetPosition(1);
+    return JpmLcdSetPosition(1);
+
+  default:
+    // error
+    return false;
   }
 }
 
-static bool burstwriteTone() {
+static bool JpmBurstwriteTone() {
   int16_t length = sdBuffer[sdPosition] & JPM_LENX_MASK;
 
   ymf825ChangeTargetChip(JpmSelxToTargetChip(sdBuffer[sdPosition] & JPM_SELX_MASK));
@@ -114,7 +118,7 @@ static bool burstwriteTone() {
   return true;
 }
 
-static bool burstwriteEq() {
+static bool JpmBurstwriteEq() {
   ymf825ChangeTargetChip(JpmSelxToTargetChip(sdBuffer[sdPosition] & JPM_SELX_MASK));
   sdReadBuffer(16);
 
@@ -131,7 +135,7 @@ static bool burstwriteEq() {
   return true;
 }
 
-static bool lcdWrite() {
+static bool JpmLcdWrite() {
   static char charBuffer[17];
   byte length = (sdBuffer[sdPosition] & JPM_LENX_MASK) + 1;
   sdReadBuffer(length);
@@ -145,14 +149,14 @@ static bool lcdWrite() {
   return true;
 }
 
-static bool lcdControl() {
+static bool JpmLcdControl() {
   switch (sdBuffer[sdPosition] & JPM_LENX_MASK) {
   case JPM_LENX_LCD_CLEAR:
     lcd.clear();
     return true;
 
   case JPM_LENX_LCD_SET_BACKLIGHT:
-    return lcdSetBackLight();
+    return JpmLcdSetBackLight();
 
   case JPM_LENX_LCD_SCROLL_LEFT:
     lcd.scrollDisplayLeft();
@@ -186,7 +190,7 @@ static bool lcdControl() {
   case JPM_LENX_LCD_CREATE_CHAR5:
   case JPM_LENX_LCD_CREATE_CHAR6:
   case JPM_LENX_LCD_CREATE_CHAR7:
-    return lcdCreateChar(sdBuffer[sdPosition] & JPM_LENX_LCD_CREATE_CHAR_MASK);
+    return JpmLcdCreateChar(sdBuffer[sdPosition] & JPM_LENX_LCD_CREATE_CHAR_MASK);
 
   default:
     // error
@@ -194,12 +198,12 @@ static bool lcdControl() {
   }
 }
 
-static bool lcdSetPosition(byte line) {
+static bool JpmLcdSetPosition(byte line) {
   lcd.setCursor(line, sdBuffer[sdPosition] & JPM_LENX_MASK);
   return true;
 }
 
-static bool lcdSetBackLight() {
+static bool JpmLcdSetBackLight() {
   sdReadBuffer(3);
 
   if (sdPosition == EOF)
@@ -212,7 +216,7 @@ static bool lcdSetBackLight() {
   return true;
 }
 
-static bool lcdCreateChar(byte num) {
+static bool JpmLcdCreateChar(byte num) {
   static char cgBuffer[8];
   sdReadBuffer(7);
 
