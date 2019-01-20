@@ -34,7 +34,7 @@ void setup() {
 }
 
 void loop() {
-  static bool paused = false;
+  bool paused = false;
   byte canProgress;
 
   sdSeekNext();
