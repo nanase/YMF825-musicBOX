@@ -1,5 +1,4 @@
 #include "jpm_decoder.h"
-#include <LiquidCrystal.h>
 
 extern int16_t sdPosition;
 extern byte sdBuffer[SD_BUFFER_SIZE];

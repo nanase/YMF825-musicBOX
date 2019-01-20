@@ -1,6 +1,3 @@
-#include "decoder.h"
-#include <SPI.h>
-
 extern Decoder *decoder;
 volatile bool ymf825Playing  = false;
 volatile bool ymf825NextFile = false;

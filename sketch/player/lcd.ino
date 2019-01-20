@@ -1,5 +1,3 @@
-#include <LiquidCrystal.h>
-
 LiquidCrystal lcd(LCD_PIN_RS, LCD_PIN_E, LCD_PIN_D4, LCD_PIN_D5, LCD_PIN_D6,
                   LCD_PIN_D7);
 

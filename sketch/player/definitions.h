@@ -8,6 +8,13 @@ const byte YMF825_LCH_ENABLE  = B00000001;
 const byte YMF825_RCH_ENABLE  = B00000010;
 const byte YMF825_BOTH_ENABLE = B00000011;
 
+#include "PetitFS.h"
+#include "config.h"
+#include "decoder.h"
+#include <LiquidCrystal.h>
+#include <SPI.h>
+#include <avr/pgmspace.h>
+
 // Sketch definitions
 
 #define EOF (-1)

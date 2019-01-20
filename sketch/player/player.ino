@@ -1,6 +1,5 @@
-#include "decoder.h"
+
 #include "definitions.h"
-#include <SPI.h>
 
 Decoder *decoder;
 extern volatile bool ymf825Playing;
