@@ -22,22 +22,18 @@ bool M25Decoder::progress() {
   // WOPx
   switch (sdBuffer[sdPosition] & M25_WOPX_MASK) {
   case M25_WOPX_WRITE_DA_DD:
-    if (!m25WriteDADD((sdBuffer[sdPosition] & M25_LENX_MASK) + 1))
-      return false;
-    break;
+    return m25WriteDADD((sdBuffer[sdPosition] & M25_LENX_MASK) + 1);
 
   case M25_WOPX_BURSTWRITE_TONE:
-    if (!m25BurstwriteTone(((int16_t)sdBuffer[sdPosition] & M25_LENX_MASK) + 1))
-      return false;
-    break;
+    return m25BurstwriteTone(((int16_t)sdBuffer[sdPosition] & M25_LENX_MASK) + 1);
 
   case M25_WOPX_BURSTWRITE_EQ:
-    if (!m25BurstwriteEq())
-      return false;
-    break;
-  }
+    return m25BurstwriteEq();
 
-  return true;
+  default:
+    // error
+    return false;
+  }
 }
 
 bool M25Decoder::IsM25File(const char *filename) {
