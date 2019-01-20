@@ -1,7 +1,5 @@
 #include "m25_decoder.h"
-
-extern int16_t sdPosition;
-extern byte sdBuffer[SD_BUFFER_SIZE];
+#include "readSdBuffer.h"
 
 bool M25Decoder::progress() {
   byte selx;
@@ -9,23 +7,23 @@ bool M25Decoder::progress() {
   if (!sdReadBuffer(1))
     return false;
 
-  selx = sdBuffer[sdPosition] & M25_SELX_MASK;
+  selx = sdBufferByte() & M25_SELX_MASK;
 
   // Wait
   if (selx == M25_SELX_WAIT) {
-    waitAdd((sdBuffer[sdPosition] & M25_LENX_MASK) + 1);
+    waitAdd((sdBufferByte() & M25_LENX_MASK) + 1);
     return true;
   }
 
   ymf825ChangeTargetChip(M25SelxToTargetChip(selx));
 
   // WOPx
-  switch (sdBuffer[sdPosition] & M25_WOPX_MASK) {
+  switch (sdBufferByte() & M25_WOPX_MASK) {
   case M25_WOPX_WRITE_DA_DD:
-    return m25WriteDADD((sdBuffer[sdPosition] & M25_LENX_MASK) + 1);
+    return m25WriteDADD((sdBufferByte() & M25_LENX_MASK) + 1);
 
   case M25_WOPX_BURSTWRITE_TONE:
-    return m25BurstwriteTone(((int16_t)sdBuffer[sdPosition] & M25_LENX_MASK) + 1);
+    return m25BurstwriteTone(((int16_t)sdBufferByte() & M25_LENX_MASK) + 1);
 
   case M25_WOPX_BURSTWRITE_EQ:
     return m25BurstwriteEq();
@@ -48,8 +46,8 @@ static bool m25WriteDADD(byte length) {
   for (byte i = 0; i < length; i++) {
     ymf825ChipSelect();
     ymf825Write(
-        sdBuffer[sdPosition + i * 2 + 0], // address
-        sdBuffer[sdPosition + i * 2 + 1]  // data
+        sdBufferByteTo(i * 2 + 0), // address
+        sdBufferByteTo(i * 2 + 1)  // data
     );
     ymf825ChipUnselect();
   }
@@ -63,8 +61,8 @@ static bool m25BurstwriteTone(int16_t length) {
 
   ymf825ChipSelect();
   ymf825BurstWrite(
-      sdBuffer[sdPosition + 0],
-      &sdBuffer[sdPosition + 1],
+      sdBufferByteTo(0),
+      &sdBufferByteTo(1),
       length * 30 + 5);
   ymf825ChipUnselect();
 
@@ -77,8 +75,8 @@ static bool m25BurstwriteEq() {
 
   ymf825ChipSelect();
   ymf825BurstWrite(
-      sdBuffer[sdPosition + 0],
-      &sdBuffer[sdPosition + 1],
+      sdBufferByteTo(0),
+      &sdBufferByteTo(1),
       15);
   ymf825ChipUnselect();
 
