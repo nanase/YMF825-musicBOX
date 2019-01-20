@@ -1,4 +1,5 @@
 static unsigned long waitGoal = 0;
+static uint16_t waitTick      = 0;
 
 extern volatile unsigned long timer0_millis;
 extern volatile unsigned long timer0_overflow_count;
@@ -17,11 +18,18 @@ void waitBegin() {
 }
 
 void waitAdd(byte tick) {
-  waitGoal += (unsigned long)tick * WAIT_RESOLUTION * 1000;
+  waitTick += tick;
 }
 
 void waitInvoke() {
-  while (waitGoal > micros()) {
-    delayMicroseconds(8);
+  while (waitTick > 0) {
+    waitGoal += WAIT_RESOLUTION * 1000;
+
+    while (waitGoal > micros()) {
+      delayMicroseconds(8);
+    }
+
+    lcdFade();
+    waitTick--;
   }
 }

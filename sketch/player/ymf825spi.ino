@@ -39,7 +39,6 @@ void ymf825Pause() {
   ymf825Playing = !ymf825Playing;
   PSerial.print("[INFO ] Push button: ");
   PSerial.println(ymf825Playing ? "PLAY" : "PAUSE");
-  waitBegin();
 }
 
 void ymf825Next() {

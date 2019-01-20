@@ -39,19 +39,18 @@ void loop() {
 
   sdSeekNext();
   ymf825ChipUnselect();
-  waitBegin();
-
   PSerial.println("[INFO ] Playing Start");
+  waitBegin();
 
   do {
     if (!ymf825Playing) {
-      delay(1);
-
       if (!paused)
         ymf825AllRelease();
 
       paused      = true;
       canProgress = true;
+      waitBegin();
+      waitAdd(1);
     } else {
       paused = false;
 
@@ -61,6 +60,7 @@ void loop() {
       } else
         canProgress = decoder->progress();
     }
+
     waitInvoke();
   } while (canProgress);
 
