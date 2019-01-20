@@ -38,9 +38,9 @@ WOP0|WOP1|SEL0|SEL1|LEN0|LEN1|LEN2|LEN3
 WOP0 | WOP1 | Operation
 -----|------|-----------
 `0`  | `0`  | Write / Wait
-`0`  | `1`  | LCD Control
 `1`  | `0`  | BurstWrite to tone parameters
 `1`  | `1`  | BurstWrite to equalizer
+| `0`  | `1`  | LCD Operate                   |
 
 SELxで Wait を使用する場合は、WOPxは `00` (Write / Wait) でなければならない。
 
@@ -58,7 +58,7 @@ SEL0 | SEL1 | Operation
 Wait の分解能は 10ms。
 デフォルト値は `1` `1` (Lch and Rch enable)。
 
-#### WOPx が LCD Control のとき
+#### WOPx が LCD Operate のとき
 
 SEL0 | SEL1 | Operation
 -----|------|-----------
