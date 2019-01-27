@@ -54,11 +54,15 @@ void lcdSetFadeSpeed(int32_t speed) {
 void lcdPrint(const char *text) {
 #ifndef DEBUG_MODE
   lcd.print(text);
+#else
+  UNUSED(text);
 #endif
 }
 
 void lcdWrite(char character) {
 #ifndef DEBUG_MODE
   lcd.write(character);
+#else
+  UNUSED(character);
 #endif
 }

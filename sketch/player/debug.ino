@@ -16,6 +16,8 @@ void debugInfo(const char *message) {
 
   PSerial.print("[INFO] ");
   PSerial.println(message);
+#else
+  UNUSED(message);
 #endif
 }
 
@@ -28,6 +30,8 @@ void debugWarn(const char *message) {
 
   PSerial.print("[WARN] ");
   PSerial.println(message);
+#else
+  UNUSED(message);
 #endif
 }
 
@@ -40,6 +44,8 @@ void debugError(const char *message) {
 
   PSerial.print("[ERROR] ");
   PSerial.println(message);
+#else
+  UNUSED(message);
 #endif
 
 #ifdef HALT_ON_ERROR

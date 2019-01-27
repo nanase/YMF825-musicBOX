@@ -44,3 +44,5 @@ PetitSerial PSerial;
 #if (_USE_LSEEK != 1)
 #error("_USE_LSEEK is disabled. Please enable _USE_LSEEK in pffconf.h!");
 #endif
+
+#define UNUSED(x) (void)(x)
