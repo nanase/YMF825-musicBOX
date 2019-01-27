@@ -6,6 +6,17 @@ static const unsigned char TONE_DATA[] PROGMEM = {
 
 extern Decoder *decoder;
 
+static const unsigned char CHAR_DATA[] PROGMEM = {
+    0b10001,
+    0b11011,
+    0b11111,
+    0b10101,
+    0b10101,
+    0b11111,
+    0b11111,
+    0b00000,
+};
+
 static void progmemReadBuffer(byte *buffer, const void *progmem, uint16_t size) {
   for (uint16_t i = 0; i < size; i++)
     buffer[i] = pgm_read_byte((unsigned char *)progmem + i);
@@ -90,9 +101,11 @@ void opening() {
   }
   // phase 3-3: 230ms
   lcd.setCursor(0, 0);
-  lcdWrite('*');
+  progmemReadBuffer(sdBuffer, CHAR_DATA, 7);
+  lcdCreateChar(0, sdBuffer);
+  lcdWrite('\x00');
   lcd.setCursor(15, 0);
-  lcdWrite('*');
+  lcdWrite('\x00');
   lcd.setCursor(2, 0);
   delay(50);
   lcdWrite('J');
