@@ -66,3 +66,8 @@ void lcdWrite(char character) {
   UNUSED(character);
 #endif
 }
+
+void lcdCreateChar(uint8_t number, uint8_t data[]) {
+  lcd.createChar(number, data);
+  lcd.begin(16, 2);
+}

@@ -212,6 +212,6 @@ static bool JpmLcdCreateChar(byte num) {
     return false;
 
   memcpy(cgBuffer, &sdBufferByte(), 7);
-  lcd.createChar(num, sdBuffer);
+  lcdCreateChar(num, sdBuffer);
   return true;
 }
