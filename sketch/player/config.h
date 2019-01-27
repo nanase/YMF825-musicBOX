@@ -5,13 +5,13 @@
 
 // Hardware definitions
 
-const byte PIN_SD = 19;
+const byte PIN_SD = 17;
 
 #define PORT_SS PORTC
 #define PORT_SS_DDR_R DDRC
 const byte PORT_SS_DDR_V = B00111111;
-const byte BIT_SS_LCH    = B00001000;
-const byte BIT_SS_RCH    = B00010000;
+const byte BIT_SS_LCH    = B00010000;
+const byte BIT_SS_RCH    = B00100000;
 const byte BIT_SS_LR     = BIT_SS_LCH | BIT_SS_RCH;
 
 const byte PIN_BT_PLAY = 2;
