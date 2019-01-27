@@ -60,7 +60,7 @@ void sdSeekNext() {
 
   if (pf_open(fileInfo.fname) != FR_OK) {
     debugWarn(fileInfo.fname);
-    return false;
+    return;
   }
 
   sdSeekPosition   = 0;
