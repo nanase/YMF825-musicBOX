@@ -135,7 +135,7 @@ static bool JpmLcdWrite() {
     return false;
 
   memcpy(charBuffer, &sdBufferByte(), length);
-  lcdPrint(&sdBufferByte());
+  lcdPrint((const char *)&sdBufferByte());
 
   return true;
 }
