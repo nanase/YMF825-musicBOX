@@ -9,24 +9,16 @@ bool JpmDecoder::progress() {
 
   switch (sdBufferByte() & JPM_WOPX_MASK) {
   case JPM_WOPX_WRITE_WAIT:
-    if (!JpmWriteOrWait())
-      return false;
-    break;
+    return JpmWriteOrWait();
 
   case JPM_WOPX_LCD_OPERATE:
-    if (!JpmLcdOperate())
-      return false;
-    break;
+    return JpmLcdOperate();
 
   case JPM_WOPX_BURSTWRITE_TONE:
-    if (!JpmBurstwriteTone())
-      return false;
-    break;
+    return JpmBurstwriteTone();
 
   case JPM_WOPX_BURSTWRITE_EQ:
-    if (!JpmBurstwriteEq())
-      return false;
-    break;
+    return JpmBurstwriteEq();
   }
 
   return false;
