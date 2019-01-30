@@ -41,9 +41,9 @@ bool JpmDecoder::IsJpmFile(const char *filename) {
   if (!sdReadBuffer(4))
     return false;
 
-  return (sdBufferByteTo(0) == 'j' &&
-          sdBufferByteTo(1) == 'p' &&
-          sdBufferByteTo(2) == 'm' &&
+  return (sdBufferByteTo(0) == 'J' &&
+          sdBufferByteTo(1) == 'P' &&
+          sdBufferByteTo(2) == 'M' &&
           sdBufferByteTo(3) == 0); // Version
 }
 
