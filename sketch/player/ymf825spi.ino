@@ -45,17 +45,12 @@ void ymf825Next() {
 void ymf825AllRelease() {
   debugInfo("All Release");
 
-  for (byte i = 0; i < 16; i++) {
-    enableLRch();
-    SPI.transfer(0x0b);
-    SPI.transfer(i);
-    disableSS();
+  enableLRch();
+  SPI.transfer(0x08);
+  SPI.transfer(0x80);
+  disableSS();
+}
 
-    enableLRch();
-    SPI.transfer(0x0f);
-    SPI.transfer(i);
-    disableSS();
-  }
 }
 
 void ymf825Write(byte address, byte data) {
