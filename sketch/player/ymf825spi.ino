@@ -51,6 +51,13 @@ void ymf825AllRelease() {
   disableSS();
 }
 
+void ymf825AllSilence() {
+  debugInfo("All Silence");
+
+  enableLRch();
+  SPI.transfer(0x08);
+  SPI.transfer(0xf0);
+  disableSS();
 }
 
 void ymf825Write(byte address, byte data) {

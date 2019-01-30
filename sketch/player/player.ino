@@ -56,5 +56,6 @@ void loop() {
   } while (canProgress);
 
   debugInfo("EOF");
+  ymf825AllSilence();
   delete decoder;
 }
