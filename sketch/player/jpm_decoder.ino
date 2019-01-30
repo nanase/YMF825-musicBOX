@@ -94,7 +94,7 @@ static bool JpmLcdOperate() {
 }
 
 static bool JpmBurstwriteTone() {
-  int16_t length = sdBufferByte() & JPM_LENX_MASK;
+  int16_t length = (sdBufferByte() & JPM_LENX_MASK) + 1;
 
   ymf825ChangeTargetChip(JpmSelxToTargetChip(sdBufferByte() & JPM_SELX_MASK));
 
