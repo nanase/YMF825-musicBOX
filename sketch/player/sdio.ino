@@ -47,6 +47,7 @@ void sdSeekNext() {
     if (pf_open(fileInfo.fname) == FR_OK) {
       sdSeekPosition   = 0;
       sdBufferPosition = 0;
+      sdRead();
 
       if (JpmDecoder::IsJpmFile(fileInfo.fname)) {
         fileOpened = true;
