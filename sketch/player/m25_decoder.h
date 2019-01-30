@@ -10,4 +10,4 @@ const byte M25_WOPX_BURSTWRITE_TONE = B00100000;
 const byte M25_WOPX_BURSTWRITE_EQ   = B00110000;
 const byte M25_LENX_MASK            = B00001111;
 
-#define M25SelxToTargetChip(x) (x >> 6)
+#define M25SelxToTargetChip(x) ((x) >> 6)

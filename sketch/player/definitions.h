@@ -45,4 +45,4 @@ PetitSerial PSerial;
 #error("_USE_LSEEK is disabled. Please enable _USE_LSEEK in pffconf.h!");
 #endif
 
-#define UNUSED(x) (void)(x)
+#define UNUSED(x) ((void)(x))

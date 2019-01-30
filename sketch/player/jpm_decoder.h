@@ -34,4 +34,4 @@ const byte JPM_LENX_LCD_CREATE_CHAR5     = B00001101;
 const byte JPM_LENX_LCD_CREATE_CHAR6     = B00001110;
 const byte JPM_LENX_LCD_CREATE_CHAR7     = B00001111;
 
-#define JpmSelxToTargetChip(x) (x >> 4)
+#define JpmSelxToTargetChip(x) ((x) >> 4)
