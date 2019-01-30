@@ -35,7 +35,7 @@ bool JpmDecoder::progress() {
 bool JpmDecoder::IsJpmFile(const char *filename) {
   char *extension = strrchr(filename, '.');
 
-  if (extension && strcmp(extension, ".JPM") != 0)
+  if (!extension || strcmp(extension, ".JPM") != 0)
     return false;
 
   if (!sdReadBuffer(4))
