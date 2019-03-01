@@ -67,6 +67,7 @@ void sdSeekNext() {
   sdSeekPosition   = 0;
   sdBufferPosition = 0;
   sdRead();
+  decoder->initialize();
 }
 
 static bool sdRead() {

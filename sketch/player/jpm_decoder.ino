@@ -3,6 +3,10 @@
 
 extern LiquidCrystal lcd;
 
+bool JpmDecoder::initialize() {
+  return sdReadBuffer(4);
+}
+
 bool JpmDecoder::progress() {
   if (!sdReadBuffer(1))
     return false;
@@ -120,14 +124,13 @@ static bool JpmBurstwriteEq() {
 }
 
 static bool JpmLcdWrite() {
-  static char charBuffer[17];
   byte length = (sdBufferByte() & JPM_LENX_MASK) + 1;
 
   if (!sdReadBuffer(length))
     return false;
 
-  memcpy(charBuffer, &sdBufferByte(), length);
-  lcdPrint((const char *)&sdBufferByte());
+  for (byte i = 0; i < length; i++)
+    lcdWrite(sdBufferByteTo(i));
 
   return true;
 }
@@ -181,8 +184,8 @@ static bool JpmLcdControl() {
   }
 }
 
-static bool JpmLcdSetPosition(byte line) {
-  lcd.setCursor(line, sdBufferByte() & JPM_LENX_MASK);
+static bool JpmLcdSetPosition(byte row) {
+  lcd.setCursor(sdBufferByte() & JPM_LENX_MASK, row);
   return true;
 }
 
@@ -204,6 +207,6 @@ static bool JpmLcdCreateChar(byte num) {
     return false;
 
   memcpy(cgBuffer, &sdBufferByte(), 7);
-  lcdCreateChar(num, sdBuffer);
+  lcdCreateChar(num, (uint8_t *)cgBuffer);
   return true;
 }

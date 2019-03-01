@@ -1,6 +1,10 @@
 #include "m25_decoder.h"
 #include "readSdBuffer.h"
 
+bool M25Decoder::initialize() {
+  return true;
+}
+
 bool M25Decoder::progress() {
   byte selx;
 
